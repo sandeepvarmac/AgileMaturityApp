@@ -47,10 +47,24 @@ switch ($Action) {
     Copy-IfExists -From (Join-Path $root 'ComponentReferences.json') -To (Join-Path $Stage 'ComponentReferences.json')
     Copy-IfExists -From (Join-Path $root 'ControlTemplates.json') -To (Join-Path $Stage 'ControlTemplates.json')
 
-    # Ensure output directory exists
-    $msappDir = Split-Path -Parent (Resolve-Path (Split-Path -Path $MsApp -Parent) -ErrorAction SilentlyContinue | ForEach-Object { $_.Path } )
-    if (-not $msappDir) { $msappDir = Split-Path -Parent $MsApp }
-    if (-not (Test-Path -LiteralPath $msappDir)) {
+    # Optional: include legacy PA YAML sources if available (can help packer)
+    $otherCandidates = @()
+    $otherCandidates += (Join-Path $root 'Other')
+    $archDir = Join-Path $root 'archive'
+    if (Test-Path -LiteralPath $archDir) {
+      $latestArch = Get-ChildItem $archDir -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
+      if ($latestArch) { $otherCandidates += (Join-Path $latestArch.FullName 'Other') }
+    }
+    foreach ($cand in $otherCandidates) {
+      if (Test-Path -LiteralPath $cand) {
+        Copy-IfExists -From $cand -To (Join-Path $Stage 'Other')
+        break
+      }
+    }
+
+    # Ensure output directory exists (avoid Resolve-Path on non-existing dirs)
+    $msappDir = Split-Path -Path $MsApp -Parent
+    if (-not [string]::IsNullOrWhiteSpace($msappDir) -and -not (Test-Path -LiteralPath $msappDir)) {
       New-Item -ItemType Directory -Path $msappDir -Force | Out-Null
     }
 
@@ -77,4 +91,3 @@ switch ($Action) {
     Write-Host "Unpacked to: $UnpackTarget" -ForegroundColor Green
   }
 }
-
