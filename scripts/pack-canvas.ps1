@@ -69,13 +69,54 @@ switch ($Action) {
     }
 
     Write-Host "Packing from: $Stage" -ForegroundColor Yellow
-    pac canvas pack --sources $Stage --msapp $MsApp
-    if (Test-Path -LiteralPath $MsApp) {
+    $msappCreated = $false
+    $logHint = "Check pac log: $env:LOCALAPPDATA\Microsoft\PowerAppsCli\*\tools\logs\pac-log.txt"
+
+    # First attempt: Fx sources + optional Other
+    try {
+      pac canvas pack --sources $Stage --msapp $MsApp
+      $msappCreated = Test-Path -LiteralPath $MsApp
+    } catch {
+      $msappCreated = $false
+    }
+
+    if (-not $msappCreated) {
+      # Fallback: rebuild stage to use only 'Other' sources + Src/Themes.json
+      Write-Host "Primary pack failed. Trying fallback: 'Other' sources + Src/Themes.json" -ForegroundColor DarkYellow
+      New-EmptyDir -Path $Stage
+      # Copy top-level required files
+      Copy-IfExists -From (Join-Path $root 'CanvasManifest.json') -To (Join-Path $Stage 'CanvasManifest.json')
+      Copy-IfExists -From (Join-Path $root 'ComponentReferences.json') -To (Join-Path $Stage 'ComponentReferences.json')
+      Copy-IfExists -From (Join-Path $root 'ControlTemplates.json') -To (Join-Path $Stage 'ControlTemplates.json')
+      # Include Themes.json (required by packer)
+      $srcThemes = Join-Path $root 'Src/ Themes.json'
+      if (-not (Test-Path $srcThemes)) { $srcThemes = Join-Path $root 'Src/Themes.json' }
+      if (Test-Path $srcThemes) {
+        New-Item -ItemType Directory -Path (Join-Path $Stage 'Src') -Force | Out-Null
+        Copy-IfExists -From $srcThemes -To (Join-Path $Stage 'Src/Themes.json')
+      }
+      # Copy 'Other' sources
+      $otherSrc = Join-Path $root 'Other'
+      if (-not (Test-Path -LiteralPath $otherSrc)) {
+        $archDir = Join-Path $root 'archive'
+        if (Test-Path -LiteralPath $archDir) {
+          $latestArch = Get-ChildItem $archDir -Directory -ErrorAction SilentlyContinue | Sort-Object Name -Descending | Select-Object -First 1
+          if ($latestArch) { $otherSrc = Join-Path $latestArch.FullName 'Other' }
+        }
+      }
+      if (Test-Path -LiteralPath $otherSrc) {
+        Copy-IfExists -From $otherSrc -To (Join-Path $Stage 'Other')
+      }
+      pac canvas pack --sources $Stage --msapp $MsApp
+      $msappCreated = Test-Path -LiteralPath $MsApp
+    }
+
+    if ($msappCreated) {
       Write-Host "Created: $MsApp" -ForegroundColor Green
       exit 0
     } else {
       Write-Host "Pack failed: msapp not created at $MsApp" -ForegroundColor Red
-      Write-Host "Check pac log: $env:LOCALAPPDATA\Microsoft\PowerAppsCli\*\tools\logs\pac-log.txt" -ForegroundColor DarkYellow
+      Write-Host $logHint -ForegroundColor DarkYellow
       exit 1
     }
   }
