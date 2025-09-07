@@ -2,91 +2,91 @@ App As appinfo:
     BackEnabled: =true
     OnStart: |+
         =// ===== CONNECTION CONFIGURATION VARIABLES =====
-        // These variables need to be updated when deploying to a different organization
-        Set(gblSharePointSiteUrl, "https://speridiantec-my.sharepoint.com/personal/sandeep_varma_speridian_com");
-        Set(gblSharePointListsPath, "_layouts/15/lists.aspx");
-        Set(gblAdminEmails, ["sandeep.varma@speridian.com", "admin@speridian.com"]);
-        // Assessor role (can rate and submit assessments). Adjust as needed.
-        Set(gblAssessorEmails, gblAdminEmails);
+        =// These variables need to be updated when deploying to a different organization
+        =Set(gblSharePointSiteUrl, "https://speridiantec-my.sharepoint.com/personal/sandeep_varma_speridian_com");
+        =Set(gblSharePointListsPath, "_layouts/15/lists.aspx");
+        =Set(gblAdminEmails, ["sandeep.varma@speridian.com", "admin@speridian.com"]);
+        =// Assessor role (can rate and submit assessments). Adjust as needed.
+        =Set(gblAssessorEmails, gblAdminEmails);
         
-        // ===== APPLICATION INITIALIZATION =====
-        Set(CurrentScreen, "Dashboard");
-        // Initialize global variables for tracking selection and progress
-        Set(selectedSubDimensionID, 0);  // Will store the selected sub-dimension ID
+        =// ===== APPLICATION INITIALIZATION =====
+        =Set(CurrentScreen, "Dashboard");
+        =// Initialize global variables for tracking selection and progress
+        =Set(selectedSubDimensionID, 0);  // Will store the selected sub-dimension ID
         
-        // Navigation and selection variables
-        Set(gblSelectedAssessment, Blank());  // Store selected assessment for navigation
-        Set(gblSelectedTeam, Blank());  // Store selected team for assessment creation
-        Set(gblExistingDraft, Blank());  // Store existing draft assessment during creation
-        Set(gblNewAssessment, Blank());  // Store newly created assessment
-        Set(gblIsNavigating, false);  // Show loading state during navigation
-        Set(gblNavigationContext, Blank());  // Store additional context for navigation
-        Set(gblShowMobileNav, false);  // Control mobile navigation overlay
+        =// Navigation and selection variables
+        =Set(gblSelectedAssessment, Blank());  // Store selected assessment for navigation
+        =Set(gblSelectedTeam, Blank());  // Store selected team for assessment creation
+        =Set(gblExistingDraft, Blank());  // Store existing draft assessment during creation
+        =Set(gblNewAssessment, Blank());  // Store newly created assessment
+        =Set(gblIsNavigating, false);  // Show loading state during navigation
+        =Set(gblNavigationContext, Blank());  // Store additional context for navigation
+        =Set(gblShowMobileNav, false);  // Control mobile navigation overlay
 
-        // Set admin/assessor permissions (prefers AppRoles list if connected)
-        Set(
-            gblIsAdmin,
-            IfError(
-                Coalesce(
-                    LookUp(AppRoles, Role.Value = "Admin" && 'User'.Email = User().Email, true),
-                    User().Email in gblAdminEmails
-                ),
-                User().Email in gblAdminEmails
-            )
-        );
-        Set(
-            gblIsAssessor,
-            IfError(
-                Coalesce(
-                    LookUp(AppRoles, Role.Value = "Assessor" && 'User'.Email = User().Email, true),
-                    User().Email in gblAssessorEmails
-                ),
-                User().Email in gblAssessorEmails
-            )
-        );
+        =// Set admin/assessor permissions (prefers AppRoles list if connected)
+        =Set(
+            =gblIsAdmin,
+            =IfError(
+                =Coalesce(
+                    =LookUp(AppRoles, Role.Value = "Admin" && 'User'.Email = User().Email, true),
+                    =User().Email in gblAdminEmails
+                =),
+                =User().Email in gblAdminEmails
+            =)
+        =);
+        =Set(
+            =gblIsAssessor,
+            =IfError(
+                =Coalesce(
+                    =LookUp(AppRoles, Role.Value = "Assessor" && 'User'.Email = User().Email, true),
+                    =User().Email in gblAssessorEmails
+                =),
+                =User().Email in gblAssessorEmails
+            =)
+        =);
 
-        // Scope: User's teams and assessments view
-        ClearCollect(
-            gblUserTeams,
-            Filter(Teams, ScrumMaster = User().FullName)
-        );
-        Set(
-            gblAssessView,
-            If(
-                gblIsAdmin,
-                Assessments,
-                Filter(Assessments, TeamLookup.Value in gblUserTeams.TeamName)
-            )
-        );
+        =// Scope: User's teams and assessments view
+        =ClearCollect(
+            =gblUserTeams,
+            =Filter(Teams, ScrumMaster = User().FullName)
+        =);
+        =Set(
+            =gblAssessView,
+            =If(
+                =gblIsAdmin,
+                =Assessments,
+                =Filter(Assessments, TeamLookup.Value in gblUserTeams.TeamName)
+            =)
+        =);
         
-        // Add to App.OnStart - Define status constants
-        ClearCollect(
-            colStatusValues,
-            {
-                StatusKey: "ToDo", 
-                StatusText: "To Do", 
-                StatusColor: ColorValue("#898989")
-            },
-            {
-                StatusKey: "InProgress", 
-                StatusText: "In Progress", 
-                StatusColor: ColorValue("#0F3557")
-            },
-            {
-                StatusKey: "Completed", 
-                StatusText: "Completed", 
-                StatusColor: ColorValue("#008265")
-            },
-            {
-                StatusKey: "NoStatements", 
-                StatusText: "No Statements", 
-                StatusColor: ColorValue("#898989")
-            }
-        );
+        =// Add to App.OnStart - Define status constants
+        =ClearCollect(
+            =colStatusValues,
+            ={
+                =StatusKey: "ToDo", 
+                =StatusText: "To Do", 
+                =StatusColor: ColorValue("#898989")
+            =},
+            ={
+                =StatusKey: "InProgress", 
+                =StatusText: "In Progress", 
+                =StatusColor: ColorValue("#0F3557")
+            =},
+            ={
+                =StatusKey: "Completed", 
+                =StatusText: "Completed", 
+                =StatusColor: ColorValue("#008265")
+            =},
+            ={
+                =StatusKey: "NoStatements", 
+                =StatusText: "No Statements", 
+                =StatusColor: ColorValue("#898989")
+            =}
+        =);
         
         
-        // Initialize modal visibility variables
-        Set(varShowNewTeamDialog, false);
+        =// Initialize modal visibility variables
+        =Set(varShowNewTeamDialog, false);
         
         
         
