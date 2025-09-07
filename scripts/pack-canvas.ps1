@@ -80,6 +80,30 @@ switch ($Action) {
       $msappCreated = $false
     }
 
+    # Second attempt: strip App.OnStart to bypass Fx parser issues
+    if (-not $msappCreated) {
+      try {
+        Write-Host "Primary pack failed. Trying Fx pack without App.OnStart (staged only)" -ForegroundColor DarkYellow
+        $appFx = Join-Path $Stage 'Src/App.fx.yaml'
+        if (Test-Path -LiteralPath $appFx) {
+          $fx = Get-Content -Path $appFx -Raw -Encoding UTF8
+          $fx2 = $fx
+          $fx2 = [regex]::Replace($fx2, "(?ms)^App As appinfo:\s*\n(\s*BackEnabled:\s*=true\s*\n)?\s*OnStart:\s*\|[+-]?\s*\n(?:\s+.*\n)*", {
+            param($m)
+            $prefix = "App As appinfo:`n"
+            if ($m.Groups[1].Success) { $prefix += $m.Groups[1].Value }
+            return $prefix
+          })
+          if ($fx2 -ne $fx) {
+            Set-Content -Path $appFx -Value $fx2 -Encoding UTF8
+            Remove-Item -Force -ErrorAction SilentlyContinue $MsApp
+            pac canvas pack --sources $Stage --msapp $MsApp
+            $msappCreated = Test-Path -LiteralPath $MsApp
+          }
+        }
+      } catch { $msappCreated = $false }
+    }
+
     if (-not $msappCreated) {
       # Fallback: rebuild stage to use only 'Other' sources + Src/Themes.json
       Write-Host "Primary pack failed. Trying fallback: 'Other' sources + Src/Themes.json" -ForegroundColor DarkYellow
