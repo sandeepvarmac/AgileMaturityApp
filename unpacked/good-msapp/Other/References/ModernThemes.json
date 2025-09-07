@@ -1,0 +1,17 @@
+{
+  "Themes": [
+    {
+      "EntityName": "PowerAppsTheme",
+      "ThemeName": "PowerAppsTheme"
+    },
+    {
+      "BasePaletteColor": "#0D9488",
+      "EntityName": "ButtonTheme",
+      "Font": "Segoe UI",
+      "HueTorsion": 0,
+      "ThemeName": "ButtonTheme",
+      "ThemePrimaryColorLocked": true,
+      "Vibrancy": 0
+    }
+  ]
+}

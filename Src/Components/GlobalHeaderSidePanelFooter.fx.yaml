@@ -10,7 +10,7 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
     ZIndex: =1
 
     cntr_globalHeader As groupContainer.horizontalAutoLayoutContainer:
-        Height: =100
+        Height: =70
         LayoutMode: =LayoutMode.Auto
         Width: =App.Width - cntr_globalNavBar.Width
         X: =cntr_globalNavBar.Width
@@ -35,19 +35,7 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
             OnSelectLogo: =false
             Style: ='Header.Style'.Primary
             TabIndex: =0
-            Title: |-
-                =Switch(
-                    CurrentScreen,
-                    "Dashboard", "🏠 Dashboard",
-                    "Teams", "👥 Teams",
-                    "Assessments", "📋 Assessments", 
-                    "Reports", "📊 Reports",
-                    "Admin", "⚙️ Admin",
-                    "Assessment", "📝 Assessment in Progress",
-                    "AssessmentResults", "📈 Assessment Results",
-                    "AssessmentSetup", "🔧 Assessment Setup",
-                    CurrentScreen
-                )
+            Title: =CurrentScreen
             TitleFontSize: =25
             TitleRole: =""
             Tooltip: =""
@@ -61,78 +49,11 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
             X: =cntr_globalNavBar.Width
             Y: =0
             ZIndex: =1
-        
-        cntr_breadcrumb As groupContainer.horizontalAutoLayoutContainer:
-            Fill: =RGBA(245, 245, 245, 1)
-            Height: =30
-            LayoutAlignItems: =LayoutAlignItems.Center
-            LayoutMode: =LayoutMode.Auto
-            PaddingLeft: =20
-            PaddingRight: =20
-            Width: =Parent.Width
-            ZIndex: =2
-            
-            btn_MobileMenu As Button:
-                Appearance: ='ButtonCanvas.Appearance'.Subtle
-                BorderRadius: =4
-                Fill: =RGBA(245, 245, 245, 1)
-                Height: =24
-                Icon: ="HamburgerMenu"
-                Layout: ='ButtonCanvas.Layout'.IconOnly
-                OnSelect: |-
-                    =// Toggle mobile navigation overlay
-                    Set(gblShowMobileNav, !gblShowMobileNav)
-                Visible: =App.Width < 768
-                Width: =24
-                ZIndex: =3
-            
-            lbl_breadcrumb As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(107, 114, 126, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =Font.'Segoe UI'
-                FontWeight: =FontWeight.Normal
-                Height: =20
-                Size: =12
-                Text: |-
-                    =Switch(
-                        CurrentScreen,
-                        "Dashboard", "Home",
-                        "Teams", "Home > Teams",
-                        "Assessments", "Home > Assessments",
-                        "Reports", "Home > Reports", 
-                        "Admin", "Home > Admin",
-                        "Assessment", 
-                            If(
-                                !IsBlank(gblSelectedTeam),
-                                "Home > Teams > " & gblSelectedTeam.TeamName & " > Assessment",
-                                "Home > Assessment"
-                            ),
-                        "AssessmentResults",
-                            If(
-                                !IsBlank(gblSelectedAssessment),
-                                "Home > Assessments > " & gblSelectedAssessment.TeamLookup.Value & " > Results",
-                                "Home > Assessment Results"
-                            ),
-                        "AssessmentSetup", "Home > Assessment Setup",
-                        "Home"
-                    )
-                ZIndex: =1
 
     cntr_globalNavBar As groupContainer.manualLayoutContainer:
         Fill: =RGBA(15, 53, 87, 1)
         Height: =App.Height
-        Width: |-
-            =// Responsive navigation width
-            If(
-                App.Width < 768,  // Mobile breakpoint
-                60,               // Collapsed width - icons only
-                If(
-                    App.Width < 1024,  // Tablet breakpoint
-                    200,               // Medium width
-                    270                // Full desktop width
-                )
-            )
+        Width: =270
         X: =Parent.X
         ZIndex: =2
 
@@ -144,27 +65,9 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
             DisabledColor: =RGBA(166, 166, 166, 1)
             Font: =Font.'Segoe UI'
             Height: =70
-            Size: |-
-                =If(
-                    App.Width < 768,
-                    20,  // Smaller text on mobile
-                    If(
-                        App.Width < 1024,
-                        25,  // Medium text on tablet
-                        30   // Full size on desktop
-                    )
-                )
-            Text: |-
-                =If(
-                    App.Width < 768,
-                    "AM",           // Very abbreviated on mobile
-                    If(
-                        App.Width < 1024,
-                        "AMAP",      // Abbreviated on tablet
-                        "Agile Maturity"  // Full name on desktop
-                    )
-                )
-            Width: =Parent.Width
+            Size: =30
+            Text: ="AMAP"
+            Width: =270
             ZIndex: =2
 
         grp_Dashboard As group:
@@ -176,64 +79,29 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
 
             btn_Dashboard As button:
                 Align: =Align.Left
-                BorderColor: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        RGBA(0, 130, 101, 1),
-                        App.Theme.Colors.Primary
-                    )
-                BorderStyle: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        BorderStyle.Solid,
-                        BorderStyle.None
-                    )
-                BorderThickness: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        3,
-                        0
-                    )
-                Color: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        RGBA(0, 130, 101, 1),
-                        App.Theme.Colors.PrimaryForeground
-                    )
+                BorderColor: =App.Theme.Colors.Primary
+                BorderStyle: =BorderStyle.None
+                BorderThickness: =0
+                Color: =App.Theme.Colors.PrimaryForeground
                 DisabledBorderColor: =RGBA(244, 244, 244, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
-                Fill: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        RGBA(0, 130, 101, 0.1),
-                        RGBA(15, 53, 87, 1)
-                    )
+                Fill: =RGBA(15, 53, 87, 1)
                 FocusedBorderThickness: =0
                 Font: =Font.Verdana
-                FontWeight: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        FontWeight.Semibold,
-                        FontWeight.Normal
-                    )
                 Height: =48
                 HoverBorderColor: =App.Theme.Colors.Darker10
                 HoverColor: =App.Theme.Colors.PrimaryForeground
                 HoverFill: =RGBA(0, 130, 101, 1)
                 OnSelect: |-
-                    =// Set loading state
-                    Set(gblIsNavigating, true);
-                    
-                    // Small delay for micro-interaction
-                    Set(gblCurrentTarget, "Dashboard");
-                    
-                    // Navigate with context
-                    Set(CurrentScreen, "Dashboard");
-                    Navigate(AppHomeScreen, ScreenTransition.Fade);
-                    
-                    // Reset loading after navigation
-                    Set(gblIsNavigating, false);
+                    =Set(
+                        CurrentScreen,
+                        "Dashboard"
+                    );
+                    Navigate(
+                        AppHomeScreen,
+                        ScreenTransition.Fade
+                    )
                 PaddingBottom: =0
                 PaddingLeft: =45
                 PaddingRight: =0
@@ -246,12 +114,7 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
                 RadiusTopLeft: =0
                 RadiusTopRight: =0
                 Size: =15
-                Text: |-
-                    =If(
-                        App.Width < 768,
-                        "",          // No text on mobile
-                        "Dashboard"  // Full text on larger screens
-                    )
+                Text: ="Dashboard"
                 Width: =Parent.Width
                 X: =Parent.X+1
                 Y: =96
@@ -261,12 +124,7 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
                 DisplayMode: =DisplayMode.Edit
                 Height: =25
                 Icon: ="Home"
-                IconColor: |-
-                    =If(
-                        CurrentScreen = "Dashboard",
-                        RGBA(0, 130, 101, 1),
-                        RGBA(255, 255, 255, 1)
-                    )
+                IconColor: =RGBA(255, 255, 255, 1)
                 IconStyle: ='Icon.IconStyle'.Filled
                 Width: =50
                 X: =Parent.X
@@ -282,47 +140,16 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
 
             btn_Teams As button:
                 Align: =Align.Left
-                BorderColor: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        RGBA(0, 130, 101, 1),
-                        App.Theme.Colors.Primary
-                    )
-                BorderStyle: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        BorderStyle.Solid,
-                        BorderStyle.None
-                    )
-                BorderThickness: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        3,
-                        0
-                    )
-                Color: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        RGBA(0, 130, 101, 1),
-                        App.Theme.Colors.PrimaryForeground
-                    )
+                BorderColor: =App.Theme.Colors.Primary
+                BorderStyle: =BorderStyle.None
+                BorderThickness: =0
+                Color: =App.Theme.Colors.PrimaryForeground
                 DisabledBorderColor: =RGBA(244, 244, 244, 1)
                 DisabledColor: =RGBA(166, 166, 166, 1)
                 DisabledFill: =RGBA(244, 244, 244, 1)
-                Fill: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        RGBA(0, 130, 101, 0.1),
-                        RGBA(15, 53, 87, 1)
-                    )
+                Fill: =RGBA(15, 53, 87, 1)
                 FocusedBorderThickness: =0
                 Font: =Font.Verdana
-                FontWeight: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        FontWeight.Semibold,
-                        FontWeight.Normal
-                    )
                 Height: =48
                 HoverBorderColor: =App.Theme.Colors.Darker10
                 HoverColor: =App.Theme.Colors.PrimaryForeground
@@ -359,12 +186,7 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
                 DisplayMode: =DisplayMode.Edit
                 Height: =25
                 Icon: ="People"
-                IconColor: |-
-                    =If(
-                        CurrentScreen = "Teams",
-                        RGBA(0, 130, 101, 1),
-                        RGBA(255, 255, 255, 1)
-                    )
+                IconColor: =RGBA(255, 255, 255, 1)
                 IconStyle: ='Icon.IconStyle'.Filled
                 Rotation: =0
                 TabIndex: =0
@@ -391,45 +213,6 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
             X: =40
             Y: =40
             ZIndex: =13
-            
-            lbl_assessments_badge As label:
-                Align: =Align.Center
-                BorderColor: =RGBA(177, 45, 27, 1)
-                BorderRadius: =10
-                BorderStyle: =BorderStyle.Solid
-                BorderThickness: =1
-                Color: =RGBA(255, 255, 255, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Fill: =RGBA(177, 45, 27, 1)
-                Font: =Font.'Segoe UI'
-                FontWeight: =FontWeight.Bold
-                Height: =20
-                Size: =10
-                Text: |-
-                    =With(
-                        {overdueCount: CountRows(
-                            Filter(
-                                Assessments,
-                                ThisRecord.TeamLookup.Value in 
-                                    Filter(Teams, ScrumMaster = User().FullName).TeamName &&
-                                ThisRecord.'Status '.Value = "Overdue"
-                            )
-                        )},
-                        If(overdueCount > 0, Text(overdueCount), "")
-                    )
-                Visible: |-
-                    =CountRows(
-                        Filter(
-                            Assessments,
-                            ThisRecord.TeamLookup.Value in 
-                                Filter(Teams, ScrumMaster = User().FullName).TeamName &&
-                            ThisRecord.'Status '.Value = "Overdue"
-                        )
-                    ) > 0
-                Width: =20
-                X: =200
-                Y: =224
-                ZIndex: =15
 
             btn_Assessments As button:
                 Align: =Align.Left
@@ -479,12 +262,7 @@ GlobalHeaderSidePanelFooter As CanvasComponent:
                 DisplayMode: =DisplayMode.Edit
                 Height: =25
                 Icon: ="DocumentBulletList"
-                IconColor: |-
-                    =If(
-                        CurrentScreen = "Assessments",
-                        RGBA(0, 130, 101, 1),
-                        RGBA(255, 255, 255, 1)
-                    )
+                IconColor: =RGBA(255, 255, 255, 1)
                 IconStyle: ='Icon.IconStyle'.Filled
                 Rotation: =0
                 TabIndex: =0

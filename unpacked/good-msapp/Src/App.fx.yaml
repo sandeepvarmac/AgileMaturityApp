@@ -1,0 +1,50 @@
+App As appinfo:
+    BackEnabled: =true
+    OnStart: |+
+        =Set(CurrentScreen, "Dashboard");
+        // Initialize global variables for tracking selection and progress
+        Set(selectedSubDimensionID, 0);  // Will store the selected sub-dimension ID
+        
+        
+        // Add to App.OnStart - Define status constants
+        ClearCollect(
+            colStatusValues,
+            {
+                StatusKey: "ToDo", 
+                StatusText: "To Do", 
+                StatusColor: ColorValue("#898989")
+            },
+            {
+                StatusKey: "InProgress", 
+                StatusText: "In Progress", 
+                StatusColor: ColorValue("#0F3557")
+            },
+            {
+                StatusKey: "Completed", 
+                StatusText: "Completed", 
+                StatusColor: ColorValue("#008265")
+            },
+            {
+                StatusKey: "NoStatements", 
+                StatusText: "No Statements", 
+                StatusColor: ColorValue("#898989")
+            }
+        );
+        
+        
+        // Initialize modal visibility variables
+        Set(varShowNewTeamDialog, false);
+        
+        
+        
+        
+        
+    Theme: =ButtonTheme
+
+    Host As hostControl.DefaultHostControlVariant:
+        OnCancel: =false
+        OnEdit: =false
+        OnNew: =false
+        OnSave: =false
+        OnView: =false
+

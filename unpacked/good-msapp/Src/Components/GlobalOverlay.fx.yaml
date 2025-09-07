@@ -1,0 +1,58 @@
+GlobalOverlay As CanvasComponent:
+    On_Select():
+        ThisProperty:
+            Default: =
+    ContentAlignment: ="Center"
+    Fill: =RGBA(0, 0, 0, 0)
+    Height: =768
+    Is_Visible: =true
+    MaxContentHeight: =466
+    MaxContentWidth: =416
+    Overlay_Color: =RGBA(0, 0, 0, 0.3)
+    Width: =1366
+    X: =0
+    Y: =0
+    ZIndex: =1
+
+    rct_OverlayBackdrop As rectangle:
+        BorderColor: =App.Theme.Colors.Darker40
+        Fill: =GlobalOverlay.Overlay_Color
+        Height: =Parent.Height
+        Width: =Parent.Width
+        X: =Parent.X
+        Y: =Parent.Y
+        ZIndex: =1
+
+    cnt_OverlayContent As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Bold
+        Fill: =RGBA(255, 255, 255, 1)
+        Height: =GlobalOverlay.MaxContentHeight
+        RadiusBottomLeft: =8
+        RadiusBottomRight: =8
+        RadiusTopLeft: =8
+        RadiusTopRight: =8
+        Visible: =GlobalOverlay.Is_Visible
+        Width: =GlobalOverlay.MaxContentWidth
+        X: =618
+        Y: |-
+            =Switch(
+                GlobalOverlay.ContentAlignment,
+                "Top", 50,
+                "Bottom", Parent.Height - Self.Height - 50,
+                "Center", 159
+            )
+        ZIndex: =2
+
+        cnt_ContentSlot As groupContainer.manualLayoutContainer:
+            DropShadow: =DropShadow.Light
+            Height: =cnt_OverlayContent.Height - 16
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Visible: =GlobalOverlay.Is_Visible
+            Width: =cnt_OverlayContent.Width - 16
+            X: =7
+            Y: =8
+            ZIndex: =1
+

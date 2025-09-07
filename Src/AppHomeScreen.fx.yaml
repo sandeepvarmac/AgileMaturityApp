@@ -11,25 +11,6 @@ AppHomeScreen As screen:
             )
         );
         
-        // Update assessment statuses based on business logic
-        ForAll(
-            Filter(
-                Assessments,
-                ThisRecord.TeamLookup.Value in MyTeams.TeamName &&
-                ThisRecord.'Status '.Value <> "Completed"
-            ),
-            // Calculate if assessment should be "Overdue"
-            // Assuming quarterly assessments - overdue if created more than 90 days ago
-            If(
-                DateDiff(ThisRecord.Created, Now(), Days) > 90 &&
-                ThisRecord.'Status '.Value = "Draft",
-                Patch(
-                    Assessments,
-                    ThisRecord,
-                    {'Status ': {Value: "Overdue"}}
-                )
-            )
-        );
         
         // Initialize overlay control variables
         UpdateContext({
@@ -50,46 +31,43 @@ AppHomeScreen As screen:
 
         btn_NewAssessment As Button:
             AcceptsFocus: =true
-            AccessibleLabel: ="Create New Assessment"
-            Align: =Align.Center
+            AccessibleLabel: =""
+            Align: =""
             Appearance: ='ButtonCanvas.Appearance'.Primary
             BasePaletteColor: =RGBA(0, 130, 101, 1)
-            BorderRadius: =8
-            BorderStyle: =BorderStyle.None
+            BorderStyle: =""
             ContentLanguage: =""
             DisplayMode: =DisplayMode.Edit
-            DropShadow: =DropShadow.Light
             Font: =Font.'Segoe UI'
             FontItalic: =false
-            FontSize: =16
+            FontSize: =20
             FontStrikethrough: =false
             FontUnderline: =false
-            FontWeight: =FontWeight.Semibold
+            FontWeight: =""
             Height: =48
-            Icon: ="DocumentAdd"
-            IconPosition: =IconPosition.Left
+            Icon: =""
             IconRotation: =0
-            IconStyle: ="Filled"
-            Layout: ='ButtonCanvas.Layout'.IconAndText
+            IconStyle: ="Outline"
+            Layout: ='ButtonCanvas.Layout'.TextOnly
             OnSelect: |
                 =// Show both the overlay and the add team form
                 UpdateContext({showOverlay: true});
                 If(
                     CountRows(MyTeams) = 0,
                     // No teams - show "no teams" modal
-                    UpdateContext({showNoTeamForm: true, showSelectTeamForm: false}),
+                    UpdateContext({showNoTeamForm: true}),
                 // Has teams - show team selection modal
-                    UpdateContext({showSelectTeamForm: true, showNoTeamForm: false})
+                    UpdateContext({showSelectTeamForm: true})
                 );
                 Reset(Txt_SelectTeam_Search);
             TabIndex: =0
             Text: ="New Assessment"
-            Tooltip: ="Start a new agile maturity assessment for one of your teams"
+            Tooltip: =""
             VerticalAlign: =VerticalAlign.Middle
             Visible: =true
-            Width: =200
-            X: =Parent.Width - Self.Width - 20
-            Y: =20
+            Width: =236
+            X: =824
+            Y: =24
             ZIndex: =1
 
         cntr_BodyCards As groupContainer.manualLayoutContainer:
@@ -150,14 +128,7 @@ AppHomeScreen As screen:
                     Font: =App.Theme.Font
                     FontWeight: =FontWeight.Bold
                     Size: =24
-                    Text: |-
-                        =CountRows(
-                            Filter(
-                                Assessments,
-                                ThisRecord.TeamLookup.Value in MyTeams.TeamName &&
-                                ThisRecord.'Status '.Value = "Completed"
-                            )
-                        ) & "/" & CountRows(MyTeams)
+                    Text: ="3/5"
                     X: =8
                     Y: =66
                     ZIndex: =3
@@ -208,14 +179,7 @@ AppHomeScreen As screen:
                     Font: =App.Theme.Font
                     FontWeight: =FontWeight.Bold
                     Size: =24
-                    Text: |-
-                        =CountRows(
-                            Filter(
-                                Assessments,
-                                ThisRecord.TeamLookup.Value in MyTeams.TeamName &&
-                                Year(ThisRecord.Created) = Year(Now())
-                            )
-                        )
+                    Text: ="24"
                     X: =16
                     Y: =63
                     ZIndex: =3
@@ -402,11 +366,7 @@ AppHomeScreen As screen:
                 '#CopilotOverlayLabel': ="Filtered"
                 BorderColor: =App.Theme.Colors.Darker40
                 DelayItemLoading: =true
-                Items: |-
-                    =Filter(
-                        Assessments,
-                        ThisRecord.TeamLookup.Value in MyTeams.TeamName
-                    )
+                Items: =Assessments
                 Layout: =Layout.Vertical
                 LayoutMinHeight: =0
                 LayoutMinWidth: =320
@@ -584,25 +544,7 @@ AppHomeScreen As screen:
                             Layout: ="Icon before"
                             LayoutMinHeight: =32
                             LayoutMinWidth: =96
-                            OnSelect: |-
-                                =// Set the selected assessment for navigation
-                                Set(gblSelectedAssessment, ThisItem);
-                                
-                                // Navigate based on assessment status
-                                Switch(
-                                    ThisItem.'Status '.Value,
-                                    "Completed", 
-                                        // Navigate to results/view screen
-                                        Navigate(AssessmentResultsScreen, ScreenTransition.Fade),
-                                    "Draft", 
-                                        // Navigate to continue assessment screen  
-                                        Navigate(AssessmentScreen, ScreenTransition.Fade),
-                                    "Overdue", 
-                                        // Navigate to start assessment screen
-                                        Navigate(AssessmentScreen, ScreenTransition.Fade),
-                                    // Default case - navigate to assessment screen
-                                    Navigate(AssessmentScreen, ScreenTransition.Fade)
-                                );
+                            OnSelect: =false
                             TabIndex: =0
                             Text: |-
                                 =Switch(
@@ -671,10 +613,8 @@ AppHomeScreen As screen:
                 OnSelect: |-
                     =UpdateContext({
                         showOverlay: false,
-                        showSelectTeamForm: false,
-                        selectedTeam: Blank()
+                        showAddTeamForm: false
                     });
-                    Reset(Txt_SelectTeam_Search);
                 Width: =30
                 ZIndex: =2
 
@@ -691,65 +631,41 @@ AppHomeScreen As screen:
             Y: =70
             ZIndex: =3
 
-            cntr_SearchControls As groupContainer.verticalAutoLayoutContainer:
-                Height: =80
-                LayoutMode: =LayoutMode.Auto
-                PaddingBottom: =10
-                PaddingLeft: =20
-                PaddingRight: =20
-                PaddingTop: =10
-                Width: =360
+            "Txt_SelectTeam_Search As 'Text input'":
+                AccessibleLabel: =""
+                Align: =""
+                Appearance: ="FilledDarker"
+                BorderColor: =RGBA(191, 191, 191, 1)
+                BorderRadius: =4
+                BorderStyle: =BorderStyle.Solid
+                BorderThickness: =1
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(255, 255, 255, 1)
+                Font: =""
+                FontItalic: =false
+                FontSize: =0
+                FontStrikethrough: =false
+                FontUnderline: =false
+                FontWeight: =""
+                Height: =40
+                MaxLength: =-1
+                Mode: ="SingleLine"
+                OnChange: |-
+                    =UpdateContext({refresh: Now()})
+                Placeholder: ="Search teams..."
+                Required: =false
+                TabIndex: =0
+                Tooltip: =""
+                TriggerOutput: ='TextInputCanvas.TriggerOutput'.Keypress
+                Type: ="Text"
+                ValidationState: ="None"
+                Value: =""
+                Visible: =true
+                Width: =lbl_Header_SelectTeam.Width + icn_header_SelectTeam_Close.Width - 20
                 X: =20
                 Y: =20
-                ZIndex: =1
-                
-                "Txt_SelectTeam_Search As 'Text input'":
-                    AccessibleLabel: ="Search teams by multiple criteria"
-                    Align: =""
-                    Appearance: ="FilledDarker"
-                    BorderColor: =RGBA(191, 191, 191, 1)
-                    BorderRadius: =4
-                    BorderStyle: =BorderStyle.Solid
-                    BorderThickness: =1
-                    ContentLanguage: =""
-                    DisplayMode: =DisplayMode.Edit
-                    Fill: =RGBA(255, 255, 255, 1)
-                    Font: =""
-                    FontItalic: =false
-                    FontSize: =0
-                    FontStrikethrough: =false
-                    FontUnderline: =false
-                    FontWeight: =""
-                    Height: =40
-                    LayoutMinHeight: =40
-                    LayoutMinWidth: =320
-                    MaxLength: =-1
-                    Mode: ="SingleLine"
-                    OnChange: |-
-                        =UpdateContext({refresh: Now()})
-                    Placeholder: ="Search teams by name, vertical, or scrum master..."
-                    Required: =false
-                    TabIndex: =0
-                    Tooltip: ="Search across team names, verticals, and scrum masters"
-                    TriggerOutput: ='TextInputCanvas.TriggerOutput'.Keypress
-                    Type: ="Text"
-                    ValidationState: ="None"
-                    Value: =""
-                    Visible: =true
-                    ZIndex: =1
-                
-                btn_AdvancedFilter As Button:
-                    Appearance: ='ButtonCanvas.Appearance'.Subtle
-                    Height: =32
-                    Icon: ="Filter"
-                    Layout: ='ButtonCanvas.Layout'.IconAndText
-                    LayoutMinHeight: =32
-                    LayoutMinWidth: =100
-                    OnSelect: |-
-                        =UpdateContext({showAdvancedFilters: !showAdvancedFilters})
-                    Text: ="Filters"
-                    Visible: =false  // Hide for now, can be enabled later
-                    ZIndex: =2
+                ZIndex: =2
 
             cntr_Slot_SelectTeam As groupContainer.manualLayoutContainer:
                 BorderColor: =RGBA(191, 191, 191, 1)
@@ -771,24 +687,23 @@ AppHomeScreen As screen:
                     BorderStyle: =BorderStyle.None
                     DelayItemLoading: =true
                     Height: =280
-                    Items: |-
-                        =If(
+                    Items: |+
+                        =/*If(
                             IsBlank(Txt_SelectTeam_Search.Value),
-                            // No search term - show all teams
                             MyTeams,
-                            // Smart multi-field search
                             Filter(
                                 MyTeams,
-                                // Search in team name
-                                Upper(Txt_SelectTeam_Search.Value) in Upper(TeamName) ||
-                                // Search in vertical
-                                Upper(Txt_SelectTeam_Search.Value) in Upper(Vertical.Value) ||
-                                // Search in scrum master name
-                                Upper(Txt_SelectTeam_Search.Value) in Upper(ScrumMaster) ||
-                                // Search in status
-                                Upper(Txt_SelectTeam_Search.Value) in Upper('Status '.Value)
+                                Upper(Txt_SelectTeam_Search.Value) in Upper(Title)
                             )
-                        )
+                        )*/
+                        
+                        
+                        
+                            Search(
+                                MyTeams,
+                                Txt_SelectTeam_Search.Value,
+                                Title
+                            )
                         
                     Layout: =Layout.Vertical
                     LoadingSpinner: =LoadingSpinner.Data
@@ -830,18 +745,7 @@ AppHomeScreen As screen:
                             Font: =App.Theme.Font
                             Height: =26
                             Size: =11
-                            Text: |-
-                                =ThisItem.Vertical.Value & If(
-                                    !IsBlank(
-                                        LookUp(
-                                            Assessments,
-                                            TeamLookup.Value = ThisItem.TeamName &&
-                                            'Status '.Value = "Draft"
-                                        )
-                                    ),
-                                    " • Draft in progress",
-                                    ""
-                                )
+                            Text: =ThisItem.Vertical.Value
                             Width: =212
                             X: =5
                             Y: =37
@@ -854,61 +758,7 @@ AppHomeScreen As screen:
                             Font: =Font.'Segoe UI'
                             FontSize: =15
                             Height: =32
-                            OnSelect: |-
-                                =// Set selected team and hide overlay
-                                Set(gblSelectedTeam, ThisItem);
-                                UpdateContext({
-                                    showOverlay: false,
-                                    showSelectTeamForm: false,
-                                    selectedTeam: ThisItem
-                                });
-                                
-                                // Check if there's already a draft assessment for this team
-                                Set(gblExistingDraft, 
-                                    LookUp(
-                                        Assessments,
-                                        TeamLookup.Value = ThisItem.TeamName &&
-                                        'Status '.Value = "Draft"
-                                    )
-                                );
-                                
-                                // If draft exists, continue that assessment, otherwise create new
-                                If(
-                                    IsBlank(gblExistingDraft),
-                                    // Create new assessment
-                                    Set(gblNewAssessment, 
-                                        Patch(
-                                            Assessments,
-                                            Defaults(Assessments),
-                                            {
-                                                TeamLookup: {Value: ThisItem.TeamName},
-                                                'Status ': {Value: "Draft"},
-                                                AssessmentType: {Value: "Regular"},
-                                                Period: Year(Now()) & " Q" & RoundUp(Month(Now())/3, 0),
-                                                CreatedBy: User().FullName,
-                                                Created: Now()
-                                            }
-                                        )
-                                    );
-                                    Set(gblSelectedAssessment, gblNewAssessment),
-                                    // Use existing draft
-                                    Set(gblSelectedAssessment, gblExistingDraft)
-                                );
-                                
-                                // Navigate to assessment screen
-                                Navigate(AssessmentScreen, ScreenTransition.Fade);
-                            Text: |-
-                                =If(
-                                    !IsBlank(
-                                        LookUp(
-                                            Assessments,
-                                            TeamLookup.Value = ThisItem.TeamName &&
-                                            'Status '.Value = "Draft"
-                                        )
-                                    ),
-                                    "Continue",
-                                    "New Assess"
-                                )
+                            Text: ="Assess"
                             Width: =96
                             X: =217
                             Y: =20
@@ -1041,15 +891,6 @@ AppHomeScreen As screen:
                     Height: =40
                     LayoutMinHeight: =32
                     LayoutMinWidth: =96
-                    OnSelect: |-
-                        =// Hide current modal and navigate to team creation
-                        UpdateContext({
-                            showOverlay: false,
-                            showNoTeamForm: false
-                        });
-                        
-                        // Navigate to team management screen
-                        Navigate(TeamsScreen, ScreenTransition.Fade);
                     Text: ="Create New Team"
                     Width: =300
                     X: =0
@@ -1074,91 +915,4 @@ AppHomeScreen As screen:
                     X: =0
                     Y: =0
                     ZIndex: =2
-
-    cntr_LoadingOverlay As groupContainer.manualLayoutContainer:
-        Fill: =RGBA(0, 0, 0, 0.3)
-        Height: =App.Height
-        Visible: =gblIsNavigating
-        Width: =App.Width
-        ZIndex: =50
-        
-        cntr_LoadingCard As groupContainer.verticalAutoLayoutContainer:
-            BorderRadius: =12
-            DropShadow: =DropShadow.Regular
-            Fill: =RGBA(255, 255, 255, 1)
-            Height: =120
-            LayoutAlignItems: =LayoutAlignItems.Center
-            LayoutJustifyContent: =LayoutJustifyContent.Center
-            LayoutMode: =LayoutMode.Auto
-            PaddingBottom: =20
-            PaddingLeft: =20
-            PaddingRight: =20
-            PaddingTop: =20
-            Width: =200
-            X: =(Parent.Width - Self.Width) / 2
-            Y: =(Parent.Height - Self.Height) / 2
-            ZIndex: =1
-            
-            icn_Loading As Icon:
-                Height: =32
-                Icon: ="Sync"
-                IconColor: =RGBA(0, 130, 101, 1)
-                LayoutMinHeight: =32
-                LayoutMinWidth: =32
-                Width: =32
-                ZIndex: =1
-            
-            lbl_Loading As label:
-                Align: =Align.Center
-                Color: =RGBA(102, 102, 102, 1)
-                Font: =Font.'Segoe UI'
-                Height: =20
-                LayoutMinHeight: =20
-                Size: =14
-                Text: ="Loading..."
-                Width: =160
-                ZIndex: =2
-
-    btn_QuickAssess As Button:
-        AcceptsFocus: =true
-        AccessibleLabel: ="Quick Assessment - Start a new assessment quickly"
-        Align: =Align.Center
-        Appearance: ='ButtonCanvas.Appearance'.Primary
-        BasePaletteColor: =RGBA(0, 130, 101, 1)
-        BorderRadius: =28
-        BorderStyle: =BorderStyle.None
-        DropShadow: =DropShadow.Regular
-        Fill: =RGBA(0, 130, 101, 1)
-        Font: =Font.'Segoe UI'
-        FontSize: =16
-        Height: =56
-        Icon: ="Add"
-        IconPosition: =IconPosition.Left
-        Layout: ='ButtonCanvas.Layout'.IconOnly
-        OnSelect: |-
-            =// Check if user has teams
-            If(
-                CountRows(MyTeams) = 0,
-                // No teams - show create team message
-                UpdateContext({
-                    showOverlay: true,
-                    showNoTeamForm: true,
-                    showSelectTeamForm: false
-                }),
-                // Has teams - show quick selection
-                UpdateContext({
-                    showOverlay: true,
-                    showSelectTeamForm: true,
-                    showNoTeamForm: false
-                })
-            );
-        PressedFill: =RGBA(0, 120, 91, 1)
-        TabIndex: =0
-        Tooltip: ="Start New Assessment"
-        VerticalAlign: =VerticalAlign.Middle
-        Visible: =true
-        Width: =56
-        X: =App.Width - 100
-        Y: =App.Height - 120
-        ZIndex: =10
 

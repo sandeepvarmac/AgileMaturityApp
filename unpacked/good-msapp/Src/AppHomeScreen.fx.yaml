@@ -1,0 +1,918 @@
+AppHomeScreen As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |-
+        =// Filter teams where the current user is the Scrum Master
+        ClearCollect(
+            MyTeams,
+            Filter(
+                Teams,
+                 ScrumMaster = User().FullName
+            )
+        );
+        
+        
+        // Initialize overlay control variables
+        UpdateContext({
+            showOverlay: false,
+            selectedTeam: Blank(),
+            showSelectTeamForm: false,
+            showNoTeamForm: false
+        });
+
+    GlobalHeaderSidePanelFooter_Dashboard As GlobalHeaderSidePanelFooter:
+
+    cntr_Body As groupContainer.manualLayoutContainer:
+        Height: =App.Height - GlobalHeaderSidePanelFooter_3.cntr_globalHeaderHeight
+        Width: =App.Width - GlobalHeaderSidePanelFooter_3.cntr_globalNavBarWidth
+        X: =GlobalHeaderSidePanelFooter_3.cntr_globalNavBarWidth
+        Y: =GlobalHeaderSidePanelFooter_3.cntr_globalHeaderHeight
+        ZIndex: =2
+
+        btn_NewAssessment As Button:
+            AcceptsFocus: =true
+            AccessibleLabel: =""
+            Align: =""
+            Appearance: ='ButtonCanvas.Appearance'.Primary
+            BasePaletteColor: =RGBA(0, 130, 101, 1)
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.'Segoe UI'
+            FontItalic: =false
+            FontSize: =20
+            FontStrikethrough: =false
+            FontUnderline: =false
+            FontWeight: =""
+            Height: =48
+            Icon: =""
+            IconRotation: =0
+            IconStyle: ="Outline"
+            Layout: ='ButtonCanvas.Layout'.TextOnly
+            OnSelect: |
+                =// Show both the overlay and the add team form
+                UpdateContext({showOverlay: true});
+                If(
+                    CountRows(MyTeams) = 0,
+                    // No teams - show "no teams" modal
+                    UpdateContext({showNoTeamForm: true}),
+                // Has teams - show team selection modal
+                    UpdateContext({showSelectTeamForm: true})
+                );
+                Reset(Txt_SelectTeam_Search);
+            TabIndex: =0
+            Text: ="New Assessment"
+            Tooltip: =""
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =true
+            Width: =236
+            X: =824
+            Y: =24
+            ZIndex: =1
+
+        cntr_BodyCards As groupContainer.manualLayoutContainer:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            Height: =150
+            PaddingBottom: =5
+            PaddingLeft: =5
+            PaddingRight: =5
+            PaddingTop: =5
+            Width: =1025
+            X: =40
+            Y: =(GlobalHeaderSidePanelFooter_3.cntr_globalHeaderHeight + btn_NewAssessment.Y)
+            ZIndex: =2
+
+            cntr_TeamsAssessedCard As groupContainer.manualLayoutContainer:
+                DropShadow: =DropShadow.Light
+                Fill: =RGBA(255, 255, 255, 1)
+                Height: =136
+                RadiusBottomLeft: =10
+                RadiusBottomRight: =10
+                RadiusTopLeft: =10
+                RadiusTopRight: =10
+                X: =5
+                Y: =5
+                ZIndex: =1
+
+                lbl_TeamAssessedText As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Size: =13
+                    Text: ="Teams Assessed"
+                    X: =8
+                    Y: =8
+                    ZIndex: =1
+
+                icon_TeamAssessed As Icon:
+                    ContentLanguage: =""
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =32
+                    Icon: ="People"
+                    IconColor: =RGBA(15, 53, 87, 1)
+                    IconStyle: ="Outline"
+                    Rotation: =0
+                    TabIndex: =0
+                    Tooltip: =""
+                    Visible: =true
+                    Width: =32
+                    X: =436
+                    Y: =12
+                    ZIndex: =2
+
+                lbl_TeamAssessedValue As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(15, 53, 87, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Bold
+                    Size: =24
+                    Text: ="3/5"
+                    X: =8
+                    Y: =66
+                    ZIndex: =3
+
+            cntr_AssessmentsYTDCard As groupContainer.manualLayoutContainer:
+                DropShadow: =DropShadow.Light
+                Fill: =RGBA(255, 255, 255, 1)
+                Height: =136
+                RadiusBottomLeft: =10
+                RadiusBottomRight: =10
+                RadiusTopLeft: =10
+                RadiusTopRight: =10
+                X: =cntr_TeamsAssessedCard.Width + 20
+                Y: =5
+                ZIndex: =2
+
+                lbl_AssessmentsYTDText As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Size: =13
+                    Text: ="Assessments YTD"
+                    Width: =163
+                    X: =16
+                    Y: =8
+                    ZIndex: =1
+
+                icon_AssessmentsYTD As Icon:
+                    ContentLanguage: =""
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =32
+                    Icon: ="Calendar"
+                    IconColor: =RGBA(15, 53, 87, 1)
+                    IconStyle: ="Outline"
+                    Rotation: =0
+                    TabIndex: =0
+                    Tooltip: =""
+                    Visible: =true
+                    Width: =32
+                    X: =435
+                    Y: =12
+                    ZIndex: =2
+
+                lbl_AssessmentsYTDValue As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(15, 53, 87, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Bold
+                    Size: =24
+                    Text: ="24"
+                    X: =16
+                    Y: =63
+                    ZIndex: =3
+
+        cntr_DataGrid As groupContainer.horizontalAutoLayoutContainer:
+            BorderStyle: =BorderStyle.None
+            BorderThickness: =1
+            DropShadow: =DropShadow.Light
+            Height: =365
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutMode: =LayoutMode.Auto
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Width: =1015
+            X: =45
+            Y: =cntr_BodyCards.Height + cntr_BodyCards.Y + 15
+            ZIndex: =3
+
+            lbl_DataGridText As label:
+                Align: =Align.Justify
+                BorderColor: =App.Theme.Colors.Darker40
+                BorderStyle: =BorderStyle.None
+                BorderThickness: =1
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Height: =50
+                PaddingLeft: =10
+                Size: =13
+                Text: ="Team Status Overview"
+                ZIndex: =1
+
+            icn_DataGridTitleBorder As icon:
+                BorderColor: =RGBA(102, 102, 102, 1)
+                BorderStyle: =BorderStyle.None
+                Color: =RGBA(166, 166, 166, 1)
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(244, 244, 244, 1)
+                DisplayMode: =DisplayMode.View
+                Fill: =RGBA(166, 166, 166, 1)
+                FocusedBorderThickness: =0
+                Height: =1
+                Icon: =Icon.HorizontalLine
+                ZIndex: =2
+
+            cntr_DataGridHeader As groupContainer.horizontalAutoLayoutContainer:
+                FillPortions: =0
+                Height: =70
+                LayoutMinHeight: =100
+                LayoutMinWidth: =0
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =3
+
+                lbl_Team As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Team"
+                    Width: =126
+                    Wrap: =false
+                    ZIndex: =1
+
+                lbl_Vertical As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Vertical"
+                    Wrap: =false
+                    ZIndex: =2
+
+                lbl_Type As label:
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Type"
+                    Width: =100
+                    Wrap: =false
+                    ZIndex: =3
+
+                lbl_Status As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    Size: =13
+                    Text: ="Status"
+                    Width: =105
+                    Wrap: =false
+                    ZIndex: =4
+
+                lbl_Period As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Period"
+                    Width: =100
+                    Wrap: =false
+                    ZIndex: =5
+
+                lbl_LastAssessed As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Last Assessed"
+                    Width: =135
+                    Wrap: =false
+                    ZIndex: =6
+
+                lbl_OverallScore As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Overall Score"
+                    Width: =135
+                    Wrap: =false
+                    ZIndex: =7
+
+                lbl_Action As label:
+                    Align: =Align.Justify
+                    AlignInContainer: =AlignInContainer.Stretch
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    Color: =RGBA(102, 102, 102, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    LayoutMinHeight: =0
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Action"
+                    Width: =126
+                    Wrap: =false
+                    ZIndex: =8
+
+            glry_DataGrid As gallery.variableTemplateHeightGallery:
+                '#CopilotOverlayLabel': ="Filtered"
+                BorderColor: =App.Theme.Colors.Darker40
+                DelayItemLoading: =true
+                Items: =Assessments
+                Layout: =Layout.Vertical
+                LayoutMinHeight: =0
+                LayoutMinWidth: =320
+                LoadingSpinner: =LoadingSpinner.Data
+                TemplatePadding: =0
+                TemplateSize: =50
+                ZIndex: =4
+
+                cntr_DataGridRows As groupContainer.manualLayoutContainer:
+                    Height: =Parent.TemplateHeight
+                    Width: =Parent.TemplateWidth
+                    ZIndex: =1
+
+                    cntr_DataGridColumns As groupContainer.horizontalAutoLayoutContainer:
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderThickness: =2
+                        DropShadow: =DropShadow.Semilight
+                        Height: =Parent.Height
+                        LayoutMode: =LayoutMode.Auto
+                        Width: =Parent.Width
+                        ZIndex: =1
+
+                        lbl_TeamValue As label:
+                            Align: =Align.Justify
+                            AlignInContainer: =AlignInContainer.Stretch
+                            BorderColor: =RGBA(230, 230, 230, 1)
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            FontWeight: =FontWeight.Semibold
+                            LayoutMinHeight: =0
+                            PaddingLeft: =10
+                            Size: =13
+                            Text: =ThisItem.TeamLookup.Value
+                            Width: =126
+                            Wrap: =false
+                            ZIndex: =1
+
+                        lbl_VerticalValue As label:
+                            AlignInContainer: =AlignInContainer.Stretch
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            LayoutMinHeight: =0
+                            PaddingLeft: =10
+                            Size: =13
+                            Text: =ThisItem.Vertical.Value
+                            ZIndex: =2
+
+                        lbl_TypeValue As label:
+                            AlignInContainer: =AlignInContainer.Stretch
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            LayoutMinHeight: =0
+                            PaddingLeft: =10
+                            Size: =13
+                            Text: =ThisItem.AssessmentType.Value
+                            Width: =100
+                            Wrap: =false
+                            ZIndex: =3
+
+                        txt_StatusValue As Text:
+                            Align: ='TextCanvas.Align'.Justify
+                            AlignInContainer: =AlignInContainer.Center
+                            AutoHeight: =false
+                            BorderRadius: =12
+                            BorderStyle: =BorderStyle.None
+                            BorderThickness: =1
+                            ContentLanguage: =""
+                            DisplayMode: =DisplayMode.Edit
+                            Fill: |-
+                                =Switch(
+                                    ThisItem.'Status '.Value,
+                                    "Completed", RGBA(115, 163, 67, 1),  // Leaf green - #73A343
+                                    "Draft", RGBA(223, 132, 11, 1),      // Valencia Orange - #DF840B   
+                                    "Overdue", RGBA(177, 45, 27, 1),    // Apple red - #B12D1B
+                                    RGBA(229, 231, 235, 1)                // Default gray - #e5e7eb
+                                )
+                            Font: =Font.'Open Sans'
+                            FontItalic: =false
+                            FontStrikethrough: =false
+                            FontUnderline: =false
+                            Height: =30
+                            LayoutMinHeight: =32
+                            LayoutMinWidth: =96
+                            PaddingBottom: =5
+                            PaddingLeft: =10
+                            PaddingRight: =5
+                            PaddingTop: =5
+                            Size: =14
+                            TabIndex: =0
+                            Text: =ThisItem.'Status '.Value
+                            Tooltip: =""
+                            VerticalAlign: =VerticalAlign.Middle
+                            Visible: =true
+                            Weight: ="Regular"
+                            Width: =96
+                            Wrap: =true
+                            X: =0
+                            Y: =0
+                            ZIndex: =4
+
+                        lbl_PeriodValue As label:
+                            AlignInContainer: =AlignInContainer.Stretch
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            LayoutMinHeight: =0
+                            PaddingLeft: =20
+                            Size: =13
+                            Text: =ThisItem.Period
+                            Width: =108
+                            Wrap: =false
+                            ZIndex: =5
+
+                        lbl_LastAssessedValue As label:
+                            AlignInContainer: =AlignInContainer.Stretch
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            LayoutMinHeight: =0
+                            PaddingLeft: =10
+                            Size: =13
+                            Text: =Text(ThisItem.CompletionDate, "yyyy-mm-dd")
+                            Width: =140
+                            Wrap: =false
+                            ZIndex: =6
+
+                        lbl_OverallScoreValue As label:
+                            AlignInContainer: =AlignInContainer.Stretch
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 130, 101, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            FontWeight: =FontWeight.Semibold
+                            LayoutMinHeight: =0
+                            PaddingLeft: =10
+                            Size: =13
+                            Text: |-
+                                =If(
+                                    IsBlank(ThisItem.OverallScore),
+                                    "-",
+                                    Text(ThisItem.OverallScore, "0.0") & "/5.0"
+                                )
+                            Width: =130
+                            Wrap: =false
+                            ZIndex: =7
+
+                        btn_Action As Button:
+                            AcceptsFocus: =true
+                            AccessibleLabel: =""
+                            Align: =Align.Justify
+                            AlignInContainer: =AlignInContainer.Center
+                            Appearance: ="Primary"
+                            BasePaletteColor: =RGBA(0, 130, 101, 1)
+                            BorderRadius: =5
+                            BorderStyle: =""
+                            ContentLanguage: =""
+                            DisplayMode: =DisplayMode.Edit
+                            Font: =Font.'Open Sans'
+                            FontItalic: =false
+                            FontSize: =0
+                            FontStrikethrough: =false
+                            FontUnderline: =false
+                            FontWeight: =FontWeight.Normal
+                            Height: =32
+                            Icon: =""
+                            IconRotation: =0
+                            IconStyle: ="Outline"
+                            Layout: ="Icon before"
+                            LayoutMinHeight: =32
+                            LayoutMinWidth: =96
+                            OnSelect: =false
+                            TabIndex: =0
+                            Text: |-
+                                =Switch(
+                                    ThisItem.'Status '.Value,
+                                    "Completed", "View",
+                                    "Draft", "Continue", 
+                                    "Overdue", "Start",
+                                    "New"  // Default value if none of the above match
+                                )
+                            Tooltip: =""
+                            VerticalAlign: =VerticalAlign.Middle
+                            Visible: =true
+                            Width: =96
+                            X: =0
+                            Y: =0
+                            ZIndex: =8
+
+    GlobalOverlay_SelectTeam As GlobalOverlay:
+        Is_Visible: =showOverlay
+        On_Select: =
+        Visible: =showOverlay
+        ZIndex: =3
+
+    cntr_Main_SelectTeam As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Fill: =RGBA(255, 255, 255, 1)
+        Height: =450
+        RadiusBottomLeft: =8
+        RadiusBottomRight: =8
+        RadiusTopLeft: =8
+        RadiusTopRight: =8
+        Visible: =showSelectTeamForm && showOverlay
+        Width: =400
+        X: =625
+        Y: =167
+        ZIndex: =4
+
+        cntr_Header_SelectTeam As groupContainer.horizontalAutoLayoutContainer:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            DropShadow: =DropShadow.Light
+            Height: =70
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutMode: =LayoutMode.Auto
+            Width: =Parent.Width
+            ZIndex: =1
+
+            lbl_Header_SelectTeam As label:
+                AlignInContainer: =AlignInContainer.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                PaddingLeft: =Parent.PaddingLeft + 15
+                Size: =13
+                Text: ="Select your Team"
+                Width: =350
+                ZIndex: =1
+
+            icn_header_SelectTeam_Close As icon:
+                AlignInContainer: =AlignInContainer.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(244, 244, 244, 1)
+                Icon: =Icon.Cancel
+                OnSelect: |-
+                    =UpdateContext({
+                        showOverlay: false,
+                        showAddTeamForm: false
+                    });
+                Width: =30
+                ZIndex: =2
+
+        cntr_Body_SelectTeam As groupContainer.manualLayoutContainer:
+            BorderColor: =RGBA(191, 191, 191, 1)
+            BorderThickness: =1
+            DropShadow: =DropShadow.Light
+            Height: =cntr_Main_SelectTeam.Height - (cntr_Header_SelectTeam.Height)
+            RadiusBottomLeft: =4
+            RadiusBottomRight: =4
+            RadiusTopLeft: =4
+            RadiusTopRight: =4
+            Width: =400
+            Y: =70
+            ZIndex: =3
+
+            "Txt_SelectTeam_Search As 'Text input'":
+                AccessibleLabel: =""
+                Align: =""
+                Appearance: ="FilledDarker"
+                BorderColor: =RGBA(191, 191, 191, 1)
+                BorderRadius: =4
+                BorderStyle: =BorderStyle.Solid
+                BorderThickness: =1
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Fill: =RGBA(255, 255, 255, 1)
+                Font: =""
+                FontItalic: =false
+                FontSize: =0
+                FontStrikethrough: =false
+                FontUnderline: =false
+                FontWeight: =""
+                Height: =40
+                MaxLength: =-1
+                Mode: ="SingleLine"
+                OnChange: |-
+                    =UpdateContext({refresh: Now()})
+                Placeholder: ="Search teams..."
+                Required: =false
+                TabIndex: =0
+                Tooltip: =""
+                TriggerOutput: ='TextInputCanvas.TriggerOutput'.Keypress
+                Type: ="Text"
+                ValidationState: ="None"
+                Value: =""
+                Visible: =true
+                Width: =lbl_Header_SelectTeam.Width + icn_header_SelectTeam_Close.Width - 20
+                X: =20
+                Y: =20
+                ZIndex: =2
+
+            cntr_Slot_SelectTeam As groupContainer.manualLayoutContainer:
+                BorderColor: =RGBA(191, 191, 191, 1)
+                BorderThickness: =1
+                DropShadow: =DropShadow.Light
+                Height: =280
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                Width: =360
+                X: =20
+                Y: =80
+                ZIndex: =3
+
+                glry_SelectTeam_Display As gallery.galleryVertical:
+                    '#CopilotOverlayLabel': ="Filtered"
+                    BorderColor: =RGBA(0, 0, 0, 0)
+                    BorderStyle: =BorderStyle.None
+                    DelayItemLoading: =true
+                    Height: =280
+                    Items: |+
+                        =/*If(
+                            IsBlank(Txt_SelectTeam_Search.Value),
+                            MyTeams,
+                            Filter(
+                                MyTeams,
+                                Upper(Txt_SelectTeam_Search.Value) in Upper(Title)
+                            )
+                        )*/
+                        
+                        
+                        
+                            Search(
+                                MyTeams,
+                                Txt_SelectTeam_Search.Value,
+                                Title
+                            )
+                        
+                    Layout: =Layout.Vertical
+                    LoadingSpinner: =LoadingSpinner.Data
+                    TemplateSize: =80
+                    Width: =360
+                    ZIndex: =1
+
+                    cntr_SelectTeam_Teams As groupContainer.manualLayoutContainer:
+                        BorderColor: =RGBA(191, 191, 191, 1)
+                        BorderThickness: =1
+                        Height: =70
+                        RadiusBottomLeft: =4
+                        RadiusBottomRight: =4
+                        RadiusTopLeft: =4
+                        RadiusTopRight: =4
+                        Width: =330
+                        X: =10
+                        Y: =10
+                        ZIndex: =1
+
+                        lbl_SelectTeam_Vertical As label:
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            FontWeight: =FontWeight.Semibold
+                            Height: =27
+                            Size: =13
+                            Text: =ThisItem.TeamName
+                            Width: =212
+                            X: =5
+                            Y: =10
+                            ZIndex: =1
+
+                        lbl_SelectTeam_Name As label:
+                            BorderColor: =App.Theme.Colors.Darker40
+                            Color: =RGBA(0, 0, 0, 1)
+                            DisabledColor: =RGBA(166, 166, 166, 1)
+                            Font: =App.Theme.Font
+                            Height: =26
+                            Size: =11
+                            Text: =ThisItem.Vertical.Value
+                            Width: =212
+                            X: =5
+                            Y: =37
+                            ZIndex: =2
+
+                        btn_SelectTeam_Assess As Button:
+                            Align: =Align.Center
+                            BasePaletteColor: =RGBA(0, 130, 101, 1)
+                            DisplayMode: =DisplayMode.Edit
+                            Font: =Font.'Segoe UI'
+                            FontSize: =15
+                            Height: =32
+                            Text: ="Assess"
+                            Width: =96
+                            X: =217
+                            Y: =20
+                            ZIndex: =3
+
+    cntr_Main_SelectTeam_1 As groupContainer.manualLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Fill: =RGBA(255, 255, 255, 1)
+        Height: =400
+        RadiusBottomLeft: =8
+        RadiusBottomRight: =8
+        RadiusTopLeft: =8
+        RadiusTopRight: =8
+        Visible: |
+            =showNoTeamForm && showOverlay
+        Width: =400
+        X: =625
+        Y: =167
+        ZIndex: =5
+
+        cntr_Header_SelectTeam_1 As groupContainer.horizontalAutoLayoutContainer:
+            BorderColor: =RGBA(0, 0, 0, 0)
+            BorderStyle: =BorderStyle.None
+            DropShadow: =DropShadow.Light
+            Height: =70
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutMode: =LayoutMode.Auto
+            Width: =Parent.Width
+            ZIndex: =1
+
+            lbl_Header_SelectTeam_1 As label:
+                AlignInContainer: =AlignInContainer.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                PaddingLeft: =Parent.PaddingLeft + 15
+                Size: =13
+                Text: ="Select your Team"
+                Width: =350
+                ZIndex: =1
+
+            icn_header_SelectTeam_Close_1 As icon:
+                AlignInContainer: =AlignInContainer.Center
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                DisabledColor: =RGBA(244, 244, 244, 1)
+                Icon: =Icon.Cancel
+                OnSelect: |-
+                    =UpdateContext({
+                        showOverlay: false,
+                        showNoTeamForm: false
+                    });
+                Width: =30
+                ZIndex: =2
+
+        cntr_Body_SelectTeam_1 As groupContainer.manualLayoutContainer:
+            BorderColor: =RGBA(191, 191, 191, 1)
+            BorderThickness: =1
+            Height: =cntr_Main_SelectTeam_1.Height - (cntr_Header_SelectTeam_1.Height)
+            Width: =400
+            Y: =70
+            ZIndex: =2
+
+            Container3 As groupContainer.verticalAutoLayoutContainer:
+                BorderColor: =RGBA(191, 191, 191, 1)
+                BorderThickness: =1
+                DropShadow: =DropShadow.Light
+                Fill: =RGBA(191, 191, 191, 0.2)
+                Height: =150
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutDirection: =LayoutDirection.Vertical
+                LayoutJustifyContent: =LayoutJustifyContent.Center
+                LayoutMode: =LayoutMode.Auto
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                Width: =380
+                X: =10
+                Y: =20
+                ZIndex: =1
+
+                Icon2 As Icon:
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =32
+                    Icon: ="ErrorCircle"
+                    IconColor: =RGBA(184, 0, 0, 1)
+                    LayoutMinHeight: =32
+                    LayoutMinWidth: =32
+                    Width: =32
+                    X: =0
+                    Y: =0
+                    ZIndex: =1
+
+                Label1 As label:
+                    Align: =Align.Center
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    Height: =70
+                    Size: =13
+                    Text: ="You don't have any teams to assess. Please create a team first."
+                    Width: =350
+                    ZIndex: =2
+
+            Container6 As groupContainer.verticalAutoLayoutContainer:
+                Height: =130
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutDirection: =LayoutDirection.Vertical
+                LayoutJustifyContent: =LayoutJustifyContent.SpaceBetween
+                LayoutMode: =LayoutMode.Auto
+                PaddingBottom: =20
+                PaddingTop: =15
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                Width: =380
+                X: =10
+                Y: =180
+                ZIndex: =2
+
+                ButtonCanvas3 As Button:
+                    Align: =Align.Center
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    Height: =40
+                    LayoutMinHeight: =32
+                    LayoutMinWidth: =96
+                    Text: ="Create New Team"
+                    Width: =300
+                    X: =0
+                    Y: =0
+                    ZIndex: =1
+
+                ButtonCanvas4 As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Outline
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    Height: =40
+                    LayoutMinHeight: =32
+                    LayoutMinWidth: =96
+                    OnSelect: |-
+                        =UpdateContext({
+                            showOverlay: false,
+                            showNoTeamForm: false
+                        });
+                    Text: ="Cancel"
+                    Width: =300
+                    X: =0
+                    Y: =0
+                    ZIndex: =2
+

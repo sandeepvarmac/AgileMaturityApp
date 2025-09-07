@@ -1,0 +1,6 @@
+AppReportsScreen As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+
+    GlobalHeaderSidePanelFooter_4 As GlobalHeaderSidePanelFooter:
+

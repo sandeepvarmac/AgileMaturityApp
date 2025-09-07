@@ -1,0 +1,1107 @@
+AppAssessmentsScreen_1 As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |+
+        =UpdateContext({selectedDimensionId: First(Dimensions).DimensionID});
+        // In App.OnStart or Screen.OnVisible
+        Set(
+            RATING_NA,
+            0
+        );
+        Set(
+            RATING_NEVER,
+            1
+        );
+        Set(
+            RATING_RARELY,
+            2
+        );
+        Set(
+            RATING_SOMETIMES,
+            3
+        );
+        Set(
+            RATING_MOSTLY,
+            4
+        );
+        Set(
+            RATING_ALWAYS,
+            5
+        );
+        If(
+            IsEmpty(colRatings),
+            ClearCollect(
+                colRatings,
+                {StatementId: "dummy", Rating: -1}  // Start with a dummy record
+            )
+        );
+        
+        // Calculate current progress for selected subdimension
+        ClearCollect(
+            colCurrentProgress,
+            {
+                TotalStatements: CountRows(Filter(Statements, SubDimensionLookup.Value = Text(selectedSubDimensionID))),
+                CompletedStatements: CountRows(
+                    Filter(
+                        colRatings,
+                        StatementId in Filter(Statements, SubDimensionLookup.Value = Text(selectedSubDimensionID)).ID
+                    )
+                )
+            }
+        );
+        
+        // Calculate status conditions
+        UpdateContext({
+            isNoStatements: First(colCurrentProgress).TotalStatements = 0,
+            isNotStarted: First(colCurrentProgress).CompletedStatements = 0 && First(colCurrentProgress).TotalStatements > 0,
+            isCompleted: First(colCurrentProgress).CompletedStatements = First(colCurrentProgress).TotalStatements && First(colCurrentProgress).TotalStatements > 0,
+            isInProgress: First(colCurrentProgress).CompletedStatements > 0 && First(colCurrentProgress).CompletedStatements < First(colCurrentProgress).TotalStatements
+        });
+        
+        // Determine current status based on conditions
+        UpdateContext({
+            currentStatus: If(
+                isNoStatements,
+                LookUp(colStatusValues, StatusKey = "NoStatements"),
+                If(
+                    isNotStarted,
+                    LookUp(colStatusValues, StatusKey = "ToDo"),
+                    If(
+                        isCompleted,
+                        LookUp(colStatusValues, StatusKey = "Completed"),
+                        LookUp(colStatusValues, StatusKey = "InProgress")
+                    )
+                )
+            )
+        });
+        
+        // Update progress bar controls
+        StatusLabel_1.Text = currentStatus.StatusText;
+        StatusLabel_1.Color = currentStatus.StatusColor;
+        ProgressFill_1.Fill = currentStatus.StatusColor;
+        ProgressFill_1.Width = If(
+            First(colCurrentProgress).TotalStatements = 0,
+            0,
+            ProgressBG_1.Width * (First(colCurrentProgress).CompletedStatements / First(colCurrentProgress).TotalStatements)
+        );
+        CountLabel_1.Text = Text(First(colCurrentProgress).CompletedStatements) & " / " & Text(First(colCurrentProgress).TotalStatements);
+        
+        
+        
+
+    cntr_AssessmentNavBar_1 As groupContainer.manualLayoutContainer:
+        Fill: =RGBA(15, 53, 87, 1)
+        Height: =App.Height
+        Width: =270
+        ZIndex: =1
+
+        lbl_AppName_5 As label:
+            Align: =Align.Center
+            BorderColor: =RGBA(191, 191, 191, 1)
+            BorderThickness: =1
+            Color: =RGBA(255, 255, 255, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =Font.'Segoe UI'
+            Height: =70
+            Size: =13
+            Text: ="Agile Maturity Assessment App"
+            Width: =270
+            ZIndex: =1
+
+        btn_DashboardTab_5 As Button:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BasePaletteColor: =
+            BorderRadius: =0
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Verdana
+            FontColor: =RGBA(255, 255, 255, 1)
+            FontSize: =20
+            FontWeight: =FontWeight.Normal
+            Height: =48
+            Icon: ="Home"
+            OnSelect: =Set(CurrentScreen, "Dashboard")
+            Text: ="Dashboard"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =270
+            X: =0
+            Y: =96
+            ZIndex: =2
+
+        btn_TeamsTab_5 As Button:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BasePaletteColor: =
+            BorderRadius: =0
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Verdana
+            FontColor: =RGBA(255, 255, 255, 1)
+            FontSize: =20
+            FontWeight: =FontWeight.Normal
+            Height: =48
+            Icon: ="People"
+            OnSelect: =Set(CurrentScreen, "Teams")
+            Text: ="Teams"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =270
+            X: =0
+            Y: =159
+            ZIndex: =3
+
+        btn_AssessmentsTab_5 As Button:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BasePaletteColor: =
+            BorderRadius: =0
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Verdana
+            FontColor: =RGBA(255, 255, 255, 1)
+            FontSize: =20
+            FontWeight: =FontWeight.Normal
+            Height: =48
+            Icon: ="DocumentBulletList"
+            OnSelect: =Set(CurrentScreen, "Assessments")
+            Text: ="Assessments"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =270
+            X: =0
+            Y: =222
+            ZIndex: =4
+
+        btn_ReportsTab_5 As Button:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BasePaletteColor: =
+            BorderRadius: =0
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Verdana
+            FontColor: =RGBA(255, 255, 255, 1)
+            FontSize: =20
+            FontWeight: =FontWeight.Normal
+            Height: =48
+            Icon: ="DocumentPdf"
+            OnSelect: =Set(CurrentScreen, "Reports")
+            Text: ="Reports"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =270
+            X: =0
+            Y: =284
+            ZIndex: =5
+
+        btn_AdminTab_5 As Button:
+            Align: =Align.Left
+            Appearance: ='ButtonCanvas.Appearance'.Transparent
+            BasePaletteColor: =
+            BorderColor: =RGBA(191, 191, 191, 1)
+            BorderRadius: =0
+            BorderStyle: =BorderStyle.Solid
+            BorderThickness: =1
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.Verdana
+            FontColor: =RGBA(255, 255, 255, 1)
+            FontSize: =20
+            FontWeight: =FontWeight.Normal
+            Height: =70
+            Icon: ="Settings"
+            OnSelect: =Set(CurrentScreen, "Admin")
+            Text: ="Admin"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =270
+            X: =0
+            Y: =698
+            ZIndex: =6
+
+    cntr_AssessmentHeader_1 As groupContainer.horizontalAutoLayoutContainer:
+        Height: =70
+        LayoutMode: =LayoutMode.Auto
+        Width: =App.Width - cntr_AssessmentNavBar_1.Width
+        X: =cntr_AssessmentNavBar_1.Width
+        ZIndex: =2
+
+        hdr_Control_5 As Header:
+            BasePaletteColor: =RGBA(102, 162, 170, 1)
+            DisplayMode: =DisplayMode.Edit
+            Fill: =RGBA(0, 130, 101, 1)
+            Font: =Font.'Segoe UI'
+            Height: =70
+            IsLogoVisible: =false
+            LayoutMinHeight: =75
+            LayoutMinWidth: =Parent.Width
+            OnSelectLogo: =false
+            Style: ='Header.Style'.Primary
+            Title: ="Team Assessment"
+            TitleFontSize: =25
+            TitleRole: =""
+            UserEmail: =User().Email
+            UserImage: =Office365Users.UserPhotoV2(User().Email)
+            UserImageAltText: =User().FullName &" profile picture"
+            UserName: =User().FullName
+            Width: =App.Width - 270
+            X: =270
+            Y: =0
+            ZIndex: =7
+
+    cntr_AssessmentBody_1 As groupContainer.manualLayoutContainer:
+        BorderColor: =RGBA(230, 230, 230, 1)
+        BorderThickness: =1
+        Height: =652
+        RadiusBottomLeft: =5
+        RadiusBottomRight: =5
+        RadiusTopLeft: =5
+        RadiusTopRight: =5
+        Width: =1048
+        X: =292
+        Y: =95
+        ZIndex: =3
+
+        Gallery1_4 As gallery.variableTemplateHeightGallery:
+            BorderColor: =RGBA(230, 230, 230, 1)
+            BorderThickness: =1
+            DelayItemLoading: =true
+            Height: =90
+            Items: =Assessments
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            ShowScrollbar: =false
+            TemplateSize: =85
+            Width: =Parent.Width
+            ZIndex: =8
+
+            Label12_12 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Size: =20
+                Text: ="Text"
+                X: =68
+                Y: =12
+                ZIndex: =9
+
+            Label13_18 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =13
+                Text: ="Assessment Type"
+                Width: =218
+                X: =698
+                Y: =12
+                ZIndex: =10
+
+            Label13_19 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =13
+                Text: ="Date"
+                X: =888
+                Y: =12
+                ZIndex: =11
+
+            Label13_20 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =13
+                Text: ="Text"
+                X: =68
+                Y: =39
+                ZIndex: =12
+
+            Label12_13 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =15
+                Text: ="Text"
+                X: =698
+                Y: =39
+                ZIndex: =13
+
+            Label12_14 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =15
+                Text: ="Text"
+                X: =888
+                Y: =39
+                ZIndex: =14
+
+        Container18_4 As groupContainer.verticalAutoLayoutContainer:
+            BorderColor: =RGBA(230, 230, 230, 1)
+            BorderThickness: =1
+            DropShadow: =DropShadow.Light
+            Height: =496
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutMode: =LayoutMode.Auto
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Width: =981
+            X: =32
+            Y: =Gallery1_4.Height + 30
+            ZIndex: =15
+
+            Container25_4 As groupContainer.horizontalAutoLayoutContainer:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                DropShadow: =DropShadow.Light
+                FillPortions: =0
+                Height: =50
+                LayoutMinHeight: =100
+                LayoutMinWidth: =250
+                LayoutMode: =LayoutMode.Auto
+                PaddingLeft: =20
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                ZIndex: =16
+
+                Label14_4 As label:
+                    AlignInContainer: =AlignInContainer.Center
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(137, 137, 137, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    PaddingLeft: =10
+                    Size: =13
+                    Text: ="Dimension"
+                    Width: =120
+                    ZIndex: =17
+
+                DropdownCanvas3_4 As Dropdown.pcfdataset:
+                    AlignInContainer: =AlignInContainer.Center
+                    Appearance: ='DropdownCanvas.Appearance'.FilledLighter
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    BorderRadius: =10
+                    BorderStyle: =BorderStyle.Solid
+                    BorderThickness: =2
+                    DefaultSelectedItems: =First(Dimensions)
+                    DisplayMode: =DisplayMode.Edit
+                    FontSize: =15
+                    Height: =32
+                    Items: =Dimensions
+                    LayoutMinHeight: =32
+                    LayoutMinWidth: =320
+                    OnChange: |-
+                        =UpdateContext({
+                            selectedDimensionId: DropdownCanvas3_4.Selected.DimensionID
+                        })
+                    Width: =320
+                    X: =0
+                    Y: =0
+                    ZIndex: =18
+
+                    Title4_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Title"
+                        FieldName: ="Title"
+                        FieldType: ="s"
+                        FieldVariantName: ="textualColumn"
+                        Order: =1
+                        ZIndex: =19
+
+                    DimensionID1_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="DimensionID"
+                        FieldName: ="DimensionID"
+                        FieldType: ="n"
+                        FieldVariantName: ="textualColumn"
+                        Order: =2
+                        ZIndex: =20
+
+                    DimensionName1_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="DimensionName"
+                        FieldName: ="DimensionName"
+                        FieldType: ="s"
+                        FieldVariantName: ="textualColumn"
+                        Order: =3
+                        ZIndex: =21
+
+                    SortOrder1_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="SortOrder"
+                        FieldName: ="SortOrder"
+                        FieldType: ="n"
+                        FieldVariantName: ="textualColumn"
+                        Order: =4
+                        ZIndex: =22
+
+                    Attachments3_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Attachments"
+                        FieldName: ="{Attachments}"
+                        FieldType: ="r*"
+                        FieldVariantName: ="textualColumn"
+                        Order: =5
+                        ZIndex: =23
+
+            Container1_2 As groupContainer.manualLayoutContainer:
+                BorderColor: =RGBA(230, 230, 230, 1)
+                BorderThickness: =1
+                DropShadow: =DropShadow.Light
+                FillPortions: =0
+                Height: =50
+                LayoutMinHeight: =100
+                LayoutMinWidth: =250
+                PaddingLeft: =20
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                ZIndex: =24
+
+                "TabList2_4 As 'Tab list'.pcfdataset":
+                    Alignment: ='TabList.Alignment'.Horizontal
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    DefaultSelectedItems: =
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontColor: =Color.Black
+                    FontSize: =15
+                    Height: =50
+                    Items: |+
+                        =Filter(
+                            SubDimensions,
+                            DimensionLookup.Value = Text(selectedDimensionId)
+                        )
+                        
+                        
+                        
+                    OnChange: =UpdateProgressDisplay.
+                    OnSelect: |-
+                        =// Set the selected subdimension ID
+                        Set(selectedSubDimension, ThisItem.SubDimensionID);
+                        
+                        // Recalculate progress for the newly selected subdimension
+                        ClearCollect(
+                            colCurrentProgress,
+                            {
+                                TotalStatements: CountRows(Filter(Statements, SubDimensionLookup.Value = Text(selectedSubDimensionID))),
+                                CompletedStatements: CountRows(
+                                    Filter(
+                                        colRatings,
+                                        StatementId in Filter(Statements, SubDimensionLookup.Value = Text(selectedSubDimensionID)).ID
+                                    )
+                                )
+                            }
+                        );
+                        
+                        // Calculate status conditions
+                        UpdateContext({
+                            isNoStatements: First(colCurrentProgress).TotalStatements = 0,
+                            isNotStarted: First(colCurrentProgress).CompletedStatements = 0 && First(colCurrentProgress).TotalStatements > 0,
+                            isCompleted: First(colCurrentProgress).CompletedStatements = First(colCurrentProgress).TotalStatements && First(colCurrentProgress).TotalStatements > 0,
+                            isInProgress: First(colCurrentProgress).CompletedStatements > 0 && First(colCurrentProgress).CompletedStatements < First(colCurrentProgress).TotalStatements
+                        });
+                        
+                        // Determine current status based on conditions
+                        UpdateContext({
+                            currentStatus: If(
+                                isNoStatements,
+                                LookUp(colStatusValues, StatusKey = "NoStatements"),
+                                If(
+                                    isNotStarted,
+                                    LookUp(colStatusValues, StatusKey = "ToDo"),
+                                    If(
+                                        isCompleted,
+                                        LookUp(colStatusValues, StatusKey = "Completed"),
+                                        LookUp(colStatusValues, StatusKey = "InProgress")
+                                    )
+                                )
+                            )
+                        });
+                        
+                        // Update progress bar controls
+                        StatusLabel_1.Text = currentStatus.StatusText;
+                        StatusLabel_1.Color = currentStatus.StatusColor;
+                        ProgressFill_1.Fill = currentStatus.StatusColor;
+                        ProgressFill_1.Width = If(
+                            First(colCurrentProgress).TotalStatements = 0,
+                            0,
+                            ProgressBG_1.Width * (First(colCurrentProgress).CompletedStatements / First(colCurrentProgress).TotalStatements)
+                        );
+                        CountLabel_1.Text = Text(First(colCurrentProgress).CompletedStatements) & " / " & Text(First(colCurrentProgress).TotalStatements);
+                        
+                        // Update statements gallery to show filtered results
+                        Reset(StatementsGallery_1);
+                    Size: ='TabList.Size'.Small
+                    Width: =960
+                    X: =20
+                    Y: =0
+                    ZIndex: =25
+
+                    SubDimensionName2_4 As PowerApps_CoreControls_TabListTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="SubDimensionName"
+                        FieldName: ="SubDimensionName"
+                        FieldType: ="s"
+                        FieldVariantName: ="textualColumn"
+                        Order: =2
+                        ZIndex: =26
+
+                    Title7_4 As PowerApps_CoreControls_TabListTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Title"
+                        FieldName: ="Title"
+                        FieldType: ="s"
+                        FieldVariantName: ="textualColumn"
+                        Order: =1
+                        ZIndex: =27
+
+            ProgressContainer_1 As groupContainer.manualLayoutContainer:
+                DropShadow: =DropShadow.Light
+                FillPortions: =0
+                Height: =60
+                LayoutMinHeight: =80
+                LayoutMinWidth: =250
+                Width: =Parent.Width
+                Y: =90
+                ZIndex: =28
+
+                StatusLabel_1 As label:
+                    Align: =Align.Center
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(137, 137, 137, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    PaddingLeft: =8
+                    Size: =13
+                    Text: ="To Do"
+                    Width: =111
+                    X: =28
+                    Y: =12
+                    ZIndex: =29
+
+                CountLabel_1 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(137, 137, 137, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    PaddingLeft: =8
+                    Size: =13
+                    Text: ="0 / 9"
+                    Width: =80
+                    X: =873
+                    Y: =12
+                    ZIndex: =30
+
+                ProgressBG_1 As button:
+                    BorderColor: =App.Theme.Colors.Primary
+                    BorderThickness: =0
+                    Color: =App.Theme.Colors.PrimaryForeground
+                    DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    DisabledFill: =RGBA(244, 244, 244, 1)
+                    DisplayMode: =DisplayMode.View
+                    Fill: =RGBA(230, 230, 230, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    Height: =16
+                    HoverBorderColor: =App.Theme.Colors.Darker10
+                    HoverColor: =App.Theme.Colors.PrimaryForeground
+                    HoverFill: =App.Theme.Colors.Darker10
+                    PressedBorderColor: =App.Theme.Colors.Darker40
+                    PressedColor: =Self.Color
+                    PressedFill: =App.Theme.Colors.Darker40
+                    Size: =15
+                    Text: =
+                    Width: =697
+                    X: =139
+                    Y: =24
+                    ZIndex: =31
+
+                ProgressFill_1 As button:
+                    BorderColor: =RGBA(255, 255, 255, 1)
+                    BorderThickness: =0
+                    Color: =App.Theme.Colors.PrimaryForeground
+                    DisabledBorderColor: =RGBA(244, 244, 244, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    DisabledFill: =RGBA(244, 244, 244, 1)
+                    DisplayMode: =DisplayMode.View
+                    Fill: =RGBA(230, 230, 230, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    Height: =16
+                    HoverBorderColor: =App.Theme.Colors.Darker10
+                    HoverColor: =App.Theme.Colors.PrimaryForeground
+                    HoverFill: =App.Theme.Colors.Darker10
+                    PressedBorderColor: =App.Theme.Colors.Darker40
+                    PressedColor: =Self.Color
+                    PressedFill: =App.Theme.Colors.Darker40
+                    Size: =15
+                    Text: =
+                    Width: =697
+                    X: =139
+                    Y: =24
+                    ZIndex: =32
+
+            StatementsGallery_1 As gallery.galleryVertical:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                BorderColor: =RGBA(230, 230, 230, 1)
+                BorderThickness: =1
+                DelayItemLoading: =true
+                FillPortions: =0
+                Height: =270
+                Items: |+
+                    =// Filter statements for selected subdimension
+                    Filter(
+                        Statements,
+                        SubDimensionLookup.Value = Text(TabList2_4.Selected.SubDimensionID)// Assuming your tabs have the subdimension IDs
+                    )
+                    
+                    
+                Layout: =Layout.Vertical
+                LayoutMinHeight: =287
+                LayoutMinWidth: =320
+                LoadingSpinner: =LoadingSpinner.Data
+                TemplateSize: =If(Self.Layout = Layout.Horizontal, Min(280, Self.Width - 60), Min(280, Self.Height - 60))
+                ZIndex: =33
+
+                Container26_4 As groupContainer.manualLayoutContainer:
+                    DropShadow: =DropShadow.Light
+                    Fill: =RGBA(230,230,230,0.3)
+                    Height: =194
+                    RadiusBottomLeft: =4
+                    RadiusBottomRight: =4
+                    RadiusTopLeft: =4
+                    RadiusTopRight: =4
+                    Width: =930
+                    Y: =16
+                    ZIndex: =34
+
+                    Label1_32 As label:
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =RGBA(0, 0, 0, 1)
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        PaddingLeft: =0
+                        Size: =13
+                        Text: =ThisItem.StatementText
+                        Width: =800
+                        X: =40
+                        Y: =12
+                        ZIndex: =35
+
+                    Label1_33 As label:
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =12
+                        Text: ="Rating"
+                        Width: =800
+                        X: =40
+                        Y: =52
+                        ZIndex: =36
+
+                    ButtonCanvas4_24 As Button:
+                        Appearance: |-
+                            =If(
+                                !IsEmpty(
+                                    Filter(
+                                        colRatings,
+                                        StatementId = Text(ThisItem.ID) && Rating = RATING_NA
+                                    )
+                                ),
+                                'ButtonCanvas.Appearance'.Primary,
+                                'ButtonCanvas.Appearance'.Secondary
+                            )
+                        BasePaletteColor: =
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderRadius: =20
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DisplayMode: =DisplayMode.Edit
+                        Height: =38
+                        IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                        OnSelect: |+
+                            =// Remove existing rating for this statement if any
+                            RemoveIf(
+                                colRatings, 
+                                StatementId = Text(ThisItem.ID)
+                            );
+                            // Add new rating
+                            Collect(
+                                colRatings,
+                                {
+                                    StatementId: Text(ThisItem.ID),
+                                    Rating: RATING_NA
+                                }
+                            );
+                            
+                            
+                            
+                        Text: ="0"
+                        Width: =130
+                        X: =40
+                        Y: =92
+                        ZIndex: =37
+
+                    ButtonCanvas4_25 As Button:
+                        Appearance: |-
+                            =If(
+                                !IsEmpty(
+                                    Filter(
+                                        colRatings,
+                                        StatementId = Text(ThisItem.ID) && Rating = RATING_NEVER
+                                    )
+                                ),
+                                'ButtonCanvas.Appearance'.Primary,
+                                'ButtonCanvas.Appearance'.Secondary
+                            )
+                        BasePaletteColor: =
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderRadius: =20
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DisplayMode: =DisplayMode.Edit
+                        Height: =38
+                        OnSelect: |-
+                            =// Remove existing rating for this statement if any
+                            RemoveIf(
+                                colRatings, 
+                                StatementId = Text(ThisItem.ID)
+                            );
+                            // Add new rating
+                            Collect(
+                                colRatings,
+                                {
+                                    StatementId: Text(ThisItem.ID),
+                                    Rating: RATING_NEVER
+                                }
+                            );
+                        Text: ="1"
+                        Width: =130
+                        X: =ButtonCanvas4_24.X + ButtonCanvas4_24.Width + 15
+                        Y: =ButtonCanvas4_24.Y
+                        ZIndex: =38
+
+                    ButtonCanvas4_26 As Button:
+                        Appearance: |-
+                            =If(
+                                !IsEmpty(
+                                    Filter(
+                                        colRatings,
+                                        StatementId = Text(ThisItem.ID) && Rating = RATING_RARELY
+                                    )
+                                ),
+                                'ButtonCanvas.Appearance'.Primary,
+                                'ButtonCanvas.Appearance'.Secondary
+                            )
+                        BasePaletteColor: =
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderRadius: =20
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DisplayMode: =DisplayMode.Edit
+                        Height: =38
+                        OnSelect: |-
+                            =// Remove existing rating for this statement if any
+                            RemoveIf(
+                                colRatings, 
+                                StatementId = Text(ThisItem.ID)
+                            );
+                            // Add new rating
+                            Collect(
+                                colRatings,
+                                {
+                                    StatementId: Text(ThisItem.ID),
+                                    Rating: RATING_RARELY
+                                }
+                            );
+                        Text: ="2"
+                        Width: =130
+                        X: =ButtonCanvas4_25.X + ButtonCanvas4_25.Width + 15
+                        Y: =ButtonCanvas4_25.Y
+                        ZIndex: =39
+
+                    ButtonCanvas4_27 As Button:
+                        Appearance: |-
+                            =If(
+                                !IsEmpty(
+                                    Filter(
+                                        colRatings,
+                                        StatementId = Text(ThisItem.ID) && Rating = RATING_SOMETIMES
+                                    )
+                                ),
+                                'ButtonCanvas.Appearance'.Primary,
+                                'ButtonCanvas.Appearance'.Secondary
+                            )
+                        BasePaletteColor: =
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderRadius: =20
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DisplayMode: =DisplayMode.Edit
+                        Height: =38
+                        OnSelect: |-
+                            =// Remove existing rating for this statement if any
+                            RemoveIf(
+                                colRatings, 
+                                StatementId = Text(ThisItem.ID)
+                            );
+                            // Add new rating
+                            Collect(
+                                colRatings,
+                                {
+                                    StatementId: Text(ThisItem.ID),
+                                    Rating: RATING_SOMETIMES
+                                }
+                            );
+                        Text: ="3"
+                        Width: =130
+                        X: =ButtonCanvas4_26.X + ButtonCanvas4_26.Width + 15
+                        Y: =ButtonCanvas4_26.Y
+                        ZIndex: =40
+
+                    ButtonCanvas4_28 As Button:
+                        Appearance: |-
+                            =If(
+                                !IsEmpty(
+                                    Filter(
+                                        colRatings,
+                                        StatementId = Text(ThisItem.ID) && Rating = RATING_MOSTLY
+                                    )
+                                ),
+                                'ButtonCanvas.Appearance'.Primary,
+                                'ButtonCanvas.Appearance'.Secondary
+                            )
+                        BasePaletteColor: =
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderRadius: =20
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DisplayMode: =DisplayMode.Edit
+                        Height: =38
+                        OnSelect: |-
+                            =// Remove existing rating for this statement if any
+                            RemoveIf(
+                                colRatings, 
+                                StatementId = Text(ThisItem.ID)
+                            );
+                            // Add new rating
+                            Collect(
+                                colRatings,
+                                {
+                                    StatementId: Text(ThisItem.ID),
+                                    Rating: RATING_MOSTLY
+                                }
+                            );
+                        Text: ="4"
+                        Width: =130
+                        X: =ButtonCanvas4_27.X + ButtonCanvas4_27.Width + 15
+                        Y: =ButtonCanvas4_27.Y
+                        ZIndex: =41
+
+                    ButtonCanvas4_29 As Button:
+                        Appearance: |-
+                            =If(
+                                !IsEmpty(
+                                    Filter(
+                                        colRatings,
+                                        StatementId = Text(ThisItem.ID) && Rating = RATING_ALWAYS
+                                    )
+                                ),
+                                'ButtonCanvas.Appearance'.Primary,
+                                'ButtonCanvas.Appearance'.Secondary
+                            )
+                        BasePaletteColor: =
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderRadius: =20
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =2
+                        DisplayMode: =DisplayMode.Edit
+                        Height: =38
+                        OnSelect: |-
+                            =// Remove existing rating for this statement if any
+                            RemoveIf(
+                                colRatings, 
+                                StatementId = Text(ThisItem.ID)
+                            );
+                            // Add new rating
+                            Collect(
+                                colRatings,
+                                {
+                                    StatementId: Text(ThisItem.ID),
+                                    Rating: RATING_ALWAYS
+                                }
+                            );
+                        Text: ="5"
+                        Width: =130
+                        X: =ButtonCanvas4_28.X + ButtonCanvas4_28.Width + 15
+                        Y: =ButtonCanvas4_28.Y
+                        ZIndex: =42
+
+                    Label1_34 As label:
+                        Align: =Align.Center
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =10
+                        Text: ="N/A"
+                        Width: =130
+                        X: =40
+                        Y: =130
+                        ZIndex: =43
+
+                    Label1_35 As label:
+                        Align: =Align.Center
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =10
+                        Text: ="Never"
+                        Width: =130
+                        X: =Label1_34.X + Label1_34.Width + 20
+                        Y: =Label1_34.Y
+                        ZIndex: =44
+
+                    Label1_36 As label:
+                        Align: =Align.Center
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =10
+                        Text: ="Rarely"
+                        Width: =130
+                        X: =Label1_35.X + Label1_35.Width + 20
+                        Y: =Label1_35.Y
+                        ZIndex: =45
+
+                    Label1_37 As label:
+                        Align: =Align.Center
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =10
+                        Text: ="50% of the time"
+                        Width: =130
+                        X: =475
+                        Y: =Label1_36.Y
+                        ZIndex: =46
+
+                    Label1_38 As label:
+                        Align: =Align.Center
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =10
+                        Text: ="Most of the time"
+                        Width: =130
+                        X: =Label1_37.X + Label1_37.Width + 20
+                        Y: =Label1_37.Y
+                        ZIndex: =47
+
+                    Label1_39 As label:
+                        Align: =Align.Center
+                        BorderColor: =App.Theme.Colors.Darker40
+                        Color: =Color.DarkGray
+                        DisabledColor: =RGBA(166, 166, 166, 1)
+                        Font: =App.Theme.Font
+                        FontWeight: =FontWeight.Semibold
+                        PaddingLeft: =0
+                        Size: =10
+                        Text: ="Always"
+                        Width: =130
+                        X: =765
+                        Y: =Label1_38.Y
+                        ZIndex: =48
+
+            Container27_4 As groupContainer.manualLayoutContainer:
+                AlignInContainer: =AlignInContainer.SetByContainer
+                BorderColor: =RGBA(230, 230, 230, 1)
+                BorderThickness: =1
+                FillPortions: =0
+                Height: =65
+                LayoutMinHeight: =100
+                LayoutMinWidth: =250
+                ZIndex: =49
+
+                ButtonCanvas16_12 As Button:
+                    Align: =Align.Justify
+                    Appearance: ='ButtonCanvas.Appearance'.Subtle
+                    BasePaletteColor: =RGBA(255, 255, 255, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontColor: =RGBA(137, 137, 137, 1)
+                    Height: =32
+                    Icon: ="ChevronLeft"
+                    IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                    Text: ="Previous"
+                    VerticalAlign: =VerticalAlign.Middle
+                    Width: =116
+                    X: =60
+                    Y: =20
+                    ZIndex: =50
+
+                ButtonCanvas16_13 As Button:
+                    Align: =Align.Justify
+                    Appearance: ='ButtonCanvas.Appearance'.Subtle
+                    BasePaletteColor: =RGBA(255, 255, 255, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontColor: =RGBA(137, 137, 137, 1)
+                    Height: =32
+                    Icon: ="ChevronLeft"
+                    IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                    Layout: ='ButtonCanvas.Layout'.TextOnly
+                    Text: ="Save as Draft"
+                    VerticalAlign: =VerticalAlign.Middle
+                    Width: =116
+                    X: =654
+                    Y: =20
+                    ZIndex: =51
+
+                ButtonCanvas16_14 As Button:
+                    Align: =Align.Justify
+                    Appearance: ='ButtonCanvas.Appearance'.Primary
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontColor: =RGBA(255, 255, 255, 1)
+                    Height: =32
+                    Icon: ="ChevronRight"
+                    IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                    Layout: ='ButtonCanvas.Layout'.IconAfter
+                    Text: ="Next"
+                    VerticalAlign: =VerticalAlign.Middle
+                    Width: =116
+                    X: =792
+                    Y: =20
+                    ZIndex: =52
+

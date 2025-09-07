@@ -1,8 +1,7 @@
-AppAssessmentsScreen_1 As screen:
+AppAssessmentsScreen As screen:
     Fill: =Color.White
     LoadingSpinnerColor: =App.Theme.Colors.Primary
     OnVisible: |+
-        =Set(gblAssessView, If(gblIsAdmin, Assessments, Filter(Assessments, TeamLookup.Value in Filter(Teams, ScrumMaster = User().FullName).TeamName)));
         =UpdateContext({selectedDimensionId: First(Dimensions).DimensionID});
         // In App.OnStart or Screen.OnVisible
         Set(
@@ -77,185 +76,20 @@ AppAssessmentsScreen_1 As screen:
         });
         
         // Update progress bar controls
-        StatusLabel_1.Text = currentStatus.StatusText;
-        StatusLabel_1.Color = currentStatus.StatusColor;
-        ProgressFill_1.Fill = currentStatus.StatusColor;
-        ProgressFill_1.Width = If(
+        StatusLabel.Text = currentStatus.StatusText;
+        StatusLabel.Color = currentStatus.StatusColor;
+        ProgressFill.Fill = currentStatus.StatusColor;
+        ProgressFill.Width = If(
             First(colCurrentProgress).TotalStatements = 0,
             0,
-            ProgressBG_1.Width * (First(colCurrentProgress).CompletedStatements / First(colCurrentProgress).TotalStatements)
+            ProgressBG.Width * (First(colCurrentProgress).CompletedStatements / First(colCurrentProgress).TotalStatements)
         );
-        CountLabel_1.Text = Text(First(colCurrentProgress).CompletedStatements) & " / " & Text(First(colCurrentProgress).TotalStatements);
+        CountLabel.Text = Text(First(colCurrentProgress).CompletedStatements) & " / " & Text(First(colCurrentProgress).TotalStatements);
         
         
         
 
-    cntr_AssessmentNavBar_1 As groupContainer.manualLayoutContainer:
-        Fill: =RGBA(15, 53, 87, 1)
-        Height: =App.Height
-        Width: =270
-        ZIndex: =1
-
-        lbl_AppName_5 As label:
-            Align: =Align.Center
-            BorderColor: =RGBA(191, 191, 191, 1)
-            BorderThickness: =1
-            Color: =RGBA(255, 255, 255, 1)
-            DisabledColor: =RGBA(166, 166, 166, 1)
-            Font: =Font.'Segoe UI'
-            Height: =70
-            Size: =13
-            Text: ="Agile Maturity Assessment App"
-            Width: =270
-            ZIndex: =1
-
-        btn_DashboardTab_5 As Button:
-            Align: =Align.Left
-            Appearance: ='ButtonCanvas.Appearance'.Transparent
-            BasePaletteColor: =
-            BorderRadius: =0
-            DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-            Font: =Font.Verdana
-            FontColor: =RGBA(255, 255, 255, 1)
-            FontSize: =20
-            FontWeight: =FontWeight.Normal
-            Height: =48
-            Icon: ="Home"
-            OnSelect: =Set(CurrentScreen, "Dashboard")
-            Text: ="Dashboard"
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =270
-            X: =0
-            Y: =96
-            ZIndex: =2
-
-        btn_TeamsTab_5 As Button:
-            Align: =Align.Left
-            Appearance: ='ButtonCanvas.Appearance'.Transparent
-            BasePaletteColor: =
-            BorderRadius: =0
-            DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-            Font: =Font.Verdana
-            FontColor: =RGBA(255, 255, 255, 1)
-            FontSize: =20
-            FontWeight: =FontWeight.Normal
-            Height: =48
-            Icon: ="People"
-            OnSelect: =Set(CurrentScreen, "Teams")
-            Text: ="Teams"
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =270
-            X: =0
-            Y: =159
-            ZIndex: =3
-
-        btn_AssessmentsTab_5 As Button:
-            Align: =Align.Left
-            Appearance: ='ButtonCanvas.Appearance'.Transparent
-            BasePaletteColor: =
-            BorderRadius: =0
-            DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-            Font: =Font.Verdana
-            FontColor: =RGBA(255, 255, 255, 1)
-            FontSize: =20
-            FontWeight: =FontWeight.Normal
-            Height: =48
-            Icon: ="DocumentBulletList"
-            OnSelect: =Set(CurrentScreen, "Assessments")
-            Text: ="Assessments"
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =270
-            X: =0
-            Y: =222
-            ZIndex: =4
-
-        btn_ReportsTab_5 As Button:
-            Align: =Align.Left
-            Appearance: ='ButtonCanvas.Appearance'.Transparent
-            BasePaletteColor: =
-            BorderRadius: =0
-            DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-            Font: =Font.Verdana
-            FontColor: =RGBA(255, 255, 255, 1)
-            FontSize: =20
-            FontWeight: =FontWeight.Normal
-            Height: =48
-            Icon: ="DocumentPdf"
-            OnSelect: =Set(CurrentScreen, "Reports")
-            Text: ="Reports"
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =270
-            X: =0
-            Y: =284
-            ZIndex: =5
-
-        btn_AdminTab_5 As Button:
-            Align: =Align.Left
-            Appearance: ='ButtonCanvas.Appearance'.Transparent
-            BasePaletteColor: =
-            BorderColor: =RGBA(191, 191, 191, 1)
-            BorderRadius: =0
-            BorderStyle: =BorderStyle.Solid
-            BorderThickness: =1
-            DisplayMode: =DisplayMode.Edit
-            Font: =Font.Verdana
-            FontColor: =RGBA(255, 255, 255, 1)
-            FontSize: =20
-            FontWeight: =FontWeight.Normal
-            Height: =70
-            Icon: ="Settings"
-            OnSelect: =Set(CurrentScreen, "Admin")
-            Text: ="Admin"
-            Visible: =gblIsAdmin
-            VerticalAlign: =VerticalAlign.Middle
-            Width: =270
-            X: =0
-            Y: =698
-            ZIndex: =6
-
-    cntr_AssessmentHeader_1 As groupContainer.horizontalAutoLayoutContainer:
-        Height: =70
-        LayoutMode: =LayoutMode.Auto
-        Width: =App.Width - cntr_AssessmentNavBar_1.Width
-        X: =cntr_AssessmentNavBar_1.Width
-        ZIndex: =2
-
-        hdr_Control_5 As Header:
-            BasePaletteColor: =RGBA(102, 162, 170, 1)
-            DisplayMode: =DisplayMode.Edit
-            Fill: =RGBA(0, 130, 101, 1)
-            Font: =Font.'Segoe UI'
-            Height: =70
-            IsLogoVisible: =false
-            LayoutMinHeight: =75
-            LayoutMinWidth: =Parent.Width
-            OnSelectLogo: =false
-            Style: ='Header.Style'.Primary
-            Title: ="Team Assessment"
-            TitleFontSize: =25
-            TitleRole: =""
-            UserEmail: =User().Email
-            UserImage: =Office365Users.UserPhotoV2(User().Email)
-            UserImageAltText: =User().FullName &" profile picture"
-            UserName: =User().FullName
-            Width: =App.Width - 270
-            X: =270
-            Y: =0
-            ZIndex: =7
-
-        lbl_ViewOnlyNotice As label:
-            Color: =RGBA(137, 137, 137, 1)
-            Font: =App.Theme.Font
-            PaddingLeft: =12
-            Size: =12
-            Text: ="View-only mode - you can browse but cannot modify ratings."
-            Visible: =!gblIsAssessor
-            Width: =500
-            X: =hdr_Control_5.X + 20
-            Y: =15
-            ZIndex: =8
-
-    cntr_AssessmentBody_1 As groupContainer.manualLayoutContainer:
+    cntr_AssessmentBody As groupContainer.manualLayoutContainer:
         BorderColor: =RGBA(230, 230, 230, 1)
         BorderThickness: =1
         Height: =652
@@ -268,98 +102,7 @@ AppAssessmentsScreen_1 As screen:
         Y: =95
         ZIndex: =3
 
-        Gallery1_4 As gallery.variableTemplateHeightGallery:
-            BorderColor: =RGBA(230, 230, 230, 1)
-            BorderThickness: =1
-            DelayItemLoading: =true
-            Height: =90
-            Items: =gblAssessView
-            Layout: =Layout.Vertical
-            LoadingSpinner: =LoadingSpinner.Data
-            ShowScrollbar: =false
-            TemplateSize: =85
-            Width: =Parent.Width
-            ZIndex: =8
-
-            Label12_12 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(0, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                Size: =20
-                Text: ="Text"
-                X: =68
-                Y: =12
-                ZIndex: =9
-
-            Label13_18 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(137, 137, 137, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                PaddingLeft: =8
-                Size: =13
-                Text: ="Assessment Type"
-                Width: =218
-                X: =698
-                Y: =12
-                ZIndex: =10
-
-            Label13_19 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(137, 137, 137, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                PaddingLeft: =8
-                Size: =13
-                Text: ="Date"
-                X: =888
-                Y: =12
-                ZIndex: =11
-
-            Label13_20 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(137, 137, 137, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                PaddingLeft: =8
-                Size: =13
-                Text: ="Text"
-                X: =68
-                Y: =39
-                ZIndex: =12
-
-            Label12_13 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(0, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                PaddingLeft: =8
-                Size: =15
-                Text: ="Text"
-                X: =698
-                Y: =39
-                ZIndex: =13
-
-            Label12_14 As label:
-                BorderColor: =App.Theme.Colors.Darker40
-                Color: =RGBA(0, 0, 0, 1)
-                DisabledColor: =RGBA(166, 166, 166, 1)
-                Font: =App.Theme.Font
-                FontWeight: =FontWeight.Semibold
-                PaddingLeft: =8
-                Size: =15
-                Text: ="Text"
-                X: =888
-                Y: =39
-                ZIndex: =14
-
-        Container18_4 As groupContainer.verticalAutoLayoutContainer:
+        Container18_3 As groupContainer.verticalAutoLayoutContainer:
             BorderColor: =RGBA(230, 230, 230, 1)
             BorderThickness: =1
             DropShadow: =DropShadow.Light
@@ -373,10 +116,10 @@ AppAssessmentsScreen_1 As screen:
             RadiusTopRight: =10
             Width: =981
             X: =32
-            Y: =Gallery1_4.Height + 30
-            ZIndex: =15
+            Y: =Gallery1_3.Height + 30
+            ZIndex: =1
 
-            Container25_4 As groupContainer.horizontalAutoLayoutContainer:
+            Container25_3 As groupContainer.horizontalAutoLayoutContainer:
                 AlignInContainer: =AlignInContainer.SetByContainer
                 DropShadow: =DropShadow.Light
                 FillPortions: =0
@@ -389,9 +132,9 @@ AppAssessmentsScreen_1 As screen:
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
                 RadiusTopRight: =4
-                ZIndex: =16
+                ZIndex: =1
 
-                Label14_4 As label:
+                Label14_3 As label:
                     AlignInContainer: =AlignInContainer.Center
                     BorderColor: =App.Theme.Colors.Darker40
                     Color: =RGBA(137, 137, 137, 1)
@@ -402,9 +145,9 @@ AppAssessmentsScreen_1 As screen:
                     Size: =13
                     Text: ="Dimension"
                     Width: =120
-                    ZIndex: =17
+                    ZIndex: =21
 
-                DropdownCanvas3_4 As Dropdown.pcfdataset:
+                DropdownCanvas3_3 As Dropdown.pcfdataset:
                     AlignInContainer: =AlignInContainer.Center
                     Appearance: ='DropdownCanvas.Appearance'.FilledLighter
                     BorderColor: =RGBA(230, 230, 230, 1)
@@ -420,54 +163,54 @@ AppAssessmentsScreen_1 As screen:
                     LayoutMinWidth: =320
                     OnChange: |-
                         =UpdateContext({
-                            selectedDimensionId: DropdownCanvas3_4.Selected.DimensionID
+                            selectedDimensionId: DropdownCanvas3_3.Selected.DimensionID
                         })
                     Width: =320
                     X: =0
                     Y: =0
-                    ZIndex: =18
+                    ZIndex: =22
 
-                    Title4_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                    Title4_3 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
                         FieldDisplayName: ="Title"
                         FieldName: ="Title"
                         FieldType: ="s"
                         FieldVariantName: ="textualColumn"
                         Order: =1
-                        ZIndex: =19
+                        ZIndex: =23
 
-                    DimensionID1_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                    DimensionID1_3 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
                         FieldDisplayName: ="DimensionID"
                         FieldName: ="DimensionID"
                         FieldType: ="n"
                         FieldVariantName: ="textualColumn"
                         Order: =2
-                        ZIndex: =20
+                        ZIndex: =24
 
-                    DimensionName1_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                    DimensionName1_3 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
                         FieldDisplayName: ="DimensionName"
                         FieldName: ="DimensionName"
                         FieldType: ="s"
                         FieldVariantName: ="textualColumn"
                         Order: =3
-                        ZIndex: =21
+                        ZIndex: =25
 
-                    SortOrder1_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                    SortOrder1_3 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
                         FieldDisplayName: ="SortOrder"
                         FieldName: ="SortOrder"
                         FieldType: ="n"
                         FieldVariantName: ="textualColumn"
                         Order: =4
-                        ZIndex: =22
+                        ZIndex: =26
 
-                    Attachments3_4 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                    Attachments3_3 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
                         FieldDisplayName: ="Attachments"
                         FieldName: ="{Attachments}"
                         FieldType: ="r*"
                         FieldVariantName: ="textualColumn"
                         Order: =5
-                        ZIndex: =23
+                        ZIndex: =27
 
-            Container1_2 As groupContainer.manualLayoutContainer:
+            Container1_1 As groupContainer.manualLayoutContainer:
                 BorderColor: =RGBA(230, 230, 230, 1)
                 BorderThickness: =1
                 DropShadow: =DropShadow.Light
@@ -480,9 +223,9 @@ AppAssessmentsScreen_1 As screen:
                 RadiusBottomRight: =4
                 RadiusTopLeft: =4
                 RadiusTopRight: =4
-                ZIndex: =24
+                ZIndex: =2
 
-                "TabList2_4 As 'Tab list'.pcfdataset":
+                "TabList2_3 As 'Tab list'.pcfdataset":
                     Alignment: ='TabList.Alignment'.Horizontal
                     BasePaletteColor: =RGBA(0, 130, 101, 1)
                     DefaultSelectedItems: =
@@ -544,41 +287,41 @@ AppAssessmentsScreen_1 As screen:
                         });
                         
                         // Update progress bar controls
-                        StatusLabel_1.Text = currentStatus.StatusText;
-                        StatusLabel_1.Color = currentStatus.StatusColor;
-                        ProgressFill_1.Fill = currentStatus.StatusColor;
-                        ProgressFill_1.Width = If(
+                        StatusLabel.Text = currentStatus.StatusText;
+                        StatusLabel.Color = currentStatus.StatusColor;
+                        ProgressFill.Fill = currentStatus.StatusColor;
+                        ProgressFill.Width = If(
                             First(colCurrentProgress).TotalStatements = 0,
                             0,
-                            ProgressBG_1.Width * (First(colCurrentProgress).CompletedStatements / First(colCurrentProgress).TotalStatements)
+                            ProgressBG.Width * (First(colCurrentProgress).CompletedStatements / First(colCurrentProgress).TotalStatements)
                         );
-                        CountLabel_1.Text = Text(First(colCurrentProgress).CompletedStatements) & " / " & Text(First(colCurrentProgress).TotalStatements);
+                        CountLabel.Text = Text(First(colCurrentProgress).CompletedStatements) & " / " & Text(First(colCurrentProgress).TotalStatements);
                         
                         // Update statements gallery to show filtered results
-                        Reset(StatementsGallery_1);
+                        Reset(StatementsGallery);
                     Size: ='TabList.Size'.Small
                     Width: =960
                     X: =20
                     Y: =0
-                    ZIndex: =25
+                    ZIndex: =1
 
-                    SubDimensionName2_4 As PowerApps_CoreControls_TabListTemplate_dataField.textualColumn:
+                    SubDimensionName2_3 As PowerApps_CoreControls_TabListTemplate_dataField.textualColumn:
                         FieldDisplayName: ="SubDimensionName"
                         FieldName: ="SubDimensionName"
                         FieldType: ="s"
                         FieldVariantName: ="textualColumn"
                         Order: =2
-                        ZIndex: =26
+                        ZIndex: =29
 
-                    Title7_4 As PowerApps_CoreControls_TabListTemplate_dataField.textualColumn:
+                    Title7_3 As PowerApps_CoreControls_TabListTemplate_dataField.textualColumn:
                         FieldDisplayName: ="Title"
                         FieldName: ="Title"
                         FieldType: ="s"
                         FieldVariantName: ="textualColumn"
                         Order: =1
-                        ZIndex: =27
+                        ZIndex: =30
 
-            ProgressContainer_1 As groupContainer.manualLayoutContainer:
+            ProgressContainer As groupContainer.manualLayoutContainer:
                 DropShadow: =DropShadow.Light
                 FillPortions: =0
                 Height: =60
@@ -586,9 +329,9 @@ AppAssessmentsScreen_1 As screen:
                 LayoutMinWidth: =250
                 Width: =Parent.Width
                 Y: =90
-                ZIndex: =28
+                ZIndex: =3
 
-                StatusLabel_1 As label:
+                StatusLabel As label:
                     Align: =Align.Center
                     BorderColor: =App.Theme.Colors.Darker40
                     Color: =RGBA(137, 137, 137, 1)
@@ -601,9 +344,9 @@ AppAssessmentsScreen_1 As screen:
                     Width: =111
                     X: =28
                     Y: =12
-                    ZIndex: =29
+                    ZIndex: =16
 
-                CountLabel_1 As label:
+                CountLabel As label:
                     BorderColor: =App.Theme.Colors.Darker40
                     Color: =RGBA(137, 137, 137, 1)
                     DisabledColor: =RGBA(166, 166, 166, 1)
@@ -615,9 +358,9 @@ AppAssessmentsScreen_1 As screen:
                     Width: =80
                     X: =873
                     Y: =12
-                    ZIndex: =30
+                    ZIndex: =17
 
-                ProgressBG_1 As button:
+                ProgressBG As button:
                     BorderColor: =App.Theme.Colors.Primary
                     BorderThickness: =0
                     Color: =App.Theme.Colors.PrimaryForeground
@@ -640,9 +383,9 @@ AppAssessmentsScreen_1 As screen:
                     Width: =697
                     X: =139
                     Y: =24
-                    ZIndex: =31
+                    ZIndex: =20
 
-                ProgressFill_1 As button:
+                ProgressFill As button:
                     BorderColor: =RGBA(255, 255, 255, 1)
                     BorderThickness: =0
                     Color: =App.Theme.Colors.PrimaryForeground
@@ -665,9 +408,9 @@ AppAssessmentsScreen_1 As screen:
                     Width: =697
                     X: =139
                     Y: =24
-                    ZIndex: =32
+                    ZIndex: =21
 
-            StatementsGallery_1 As gallery.galleryVertical:
+            StatementsGallery As gallery.galleryVertical:
                 AlignInContainer: =AlignInContainer.SetByContainer
                 BorderColor: =RGBA(230, 230, 230, 1)
                 BorderThickness: =1
@@ -678,7 +421,7 @@ AppAssessmentsScreen_1 As screen:
                     =// Filter statements for selected subdimension
                     Filter(
                         Statements,
-                        SubDimensionLookup.Value = Text(TabList2_4.Selected.SubDimensionID)// Assuming your tabs have the subdimension IDs
+                        SubDimensionLookup.Value = Text(TabList2_3.Selected.SubDimensionID)// Assuming your tabs have the subdimension IDs
                     )
                     
                     
@@ -687,9 +430,9 @@ AppAssessmentsScreen_1 As screen:
                 LayoutMinWidth: =320
                 LoadingSpinner: =LoadingSpinner.Data
                 TemplateSize: =If(Self.Layout = Layout.Horizontal, Min(280, Self.Width - 60), Min(280, Self.Height - 60))
-                ZIndex: =33
+                ZIndex: =4
 
-                Container26_4 As groupContainer.manualLayoutContainer:
+                Container26_3 As groupContainer.manualLayoutContainer:
                     DropShadow: =DropShadow.Light
                     Fill: =RGBA(230,230,230,0.3)
                     Height: =194
@@ -698,10 +441,11 @@ AppAssessmentsScreen_1 As screen:
                     RadiusTopLeft: =4
                     RadiusTopRight: =4
                     Width: =930
+                    X: =20
                     Y: =16
-                    ZIndex: =34
+                    ZIndex: =32
 
-                    Label1_32 As label:
+                    Label1_24 As label:
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =RGBA(0, 0, 0, 1)
                         DisabledColor: =RGBA(166, 166, 166, 1)
@@ -712,9 +456,9 @@ AppAssessmentsScreen_1 As screen:
                         Width: =800
                         X: =40
                         Y: =12
-                        ZIndex: =35
+                        ZIndex: =33
 
-                    Label1_33 As label:
+                    Label1_25 As label:
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
                         DisabledColor: =RGBA(166, 166, 166, 1)
@@ -726,9 +470,9 @@ AppAssessmentsScreen_1 As screen:
                         Width: =800
                         X: =40
                         Y: =52
-                        ZIndex: =36
+                        ZIndex: =34
 
-                    ButtonCanvas4_24 As Button:
+                    ButtonCanvas4_18 As Button:
                         Appearance: |-
                             =If(
                                 !IsEmpty(
@@ -746,7 +490,6 @@ AppAssessmentsScreen_1 As screen:
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =2
                         DisplayMode: =DisplayMode.Edit
-                        Visible: =gblIsAssessor
                         Height: =38
                         IconStyle: ='ButtonCanvas.IconStyle'.Filled
                         OnSelect: |+
@@ -770,9 +513,9 @@ AppAssessmentsScreen_1 As screen:
                         Width: =130
                         X: =40
                         Y: =92
-                        ZIndex: =37
+                        ZIndex: =35
 
-                    ButtonCanvas4_25 As Button:
+                    ButtonCanvas4_19 As Button:
                         Appearance: |-
                             =If(
                                 !IsEmpty(
@@ -790,7 +533,6 @@ AppAssessmentsScreen_1 As screen:
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =2
                         DisplayMode: =DisplayMode.Edit
-                        Visible: =gblIsAssessor
                         Height: =38
                         OnSelect: |-
                             =// Remove existing rating for this statement if any
@@ -808,11 +550,11 @@ AppAssessmentsScreen_1 As screen:
                             );
                         Text: ="1"
                         Width: =130
-                        X: =ButtonCanvas4_24.X + ButtonCanvas4_24.Width + 15
-                        Y: =ButtonCanvas4_24.Y
-                        ZIndex: =38
+                        X: =ButtonCanvas4_18.X + ButtonCanvas4_18.Width + 15
+                        Y: =ButtonCanvas4_18.Y
+                        ZIndex: =36
 
-                    ButtonCanvas4_26 As Button:
+                    ButtonCanvas4_20 As Button:
                         Appearance: |-
                             =If(
                                 !IsEmpty(
@@ -830,7 +572,6 @@ AppAssessmentsScreen_1 As screen:
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =2
                         DisplayMode: =DisplayMode.Edit
-                        Visible: =gblIsAssessor
                         Height: =38
                         OnSelect: |-
                             =// Remove existing rating for this statement if any
@@ -848,11 +589,11 @@ AppAssessmentsScreen_1 As screen:
                             );
                         Text: ="2"
                         Width: =130
-                        X: =ButtonCanvas4_25.X + ButtonCanvas4_25.Width + 15
-                        Y: =ButtonCanvas4_25.Y
-                        ZIndex: =39
+                        X: =ButtonCanvas4_19.X + ButtonCanvas4_19.Width + 15
+                        Y: =ButtonCanvas4_19.Y
+                        ZIndex: =37
 
-                    ButtonCanvas4_27 As Button:
+                    ButtonCanvas4_21 As Button:
                         Appearance: |-
                             =If(
                                 !IsEmpty(
@@ -869,8 +610,7 @@ AppAssessmentsScreen_1 As screen:
                         BorderRadius: =20
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =2
-                        DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-                        Visible: =gblIsAssessor
+                        DisplayMode: =DisplayMode.Edit
                         Height: =38
                         OnSelect: |-
                             =// Remove existing rating for this statement if any
@@ -888,11 +628,11 @@ AppAssessmentsScreen_1 As screen:
                             );
                         Text: ="3"
                         Width: =130
-                        X: =ButtonCanvas4_26.X + ButtonCanvas4_26.Width + 15
-                        Y: =ButtonCanvas4_26.Y
-                        ZIndex: =40
+                        X: =ButtonCanvas4_20.X + ButtonCanvas4_20.Width + 15
+                        Y: =ButtonCanvas4_20.Y
+                        ZIndex: =38
 
-                    ButtonCanvas4_28 As Button:
+                    ButtonCanvas4_22 As Button:
                         Appearance: |-
                             =If(
                                 !IsEmpty(
@@ -909,8 +649,7 @@ AppAssessmentsScreen_1 As screen:
                         BorderRadius: =20
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =2
-                        DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-                        Visible: =gblIsAssessor
+                        DisplayMode: =DisplayMode.Edit
                         Height: =38
                         OnSelect: |-
                             =// Remove existing rating for this statement if any
@@ -928,11 +667,11 @@ AppAssessmentsScreen_1 As screen:
                             );
                         Text: ="4"
                         Width: =130
-                        X: =ButtonCanvas4_27.X + ButtonCanvas4_27.Width + 15
-                        Y: =ButtonCanvas4_27.Y
-                        ZIndex: =41
+                        X: =ButtonCanvas4_21.X + ButtonCanvas4_21.Width + 15
+                        Y: =ButtonCanvas4_21.Y
+                        ZIndex: =39
 
-                    ButtonCanvas4_29 As Button:
+                    ButtonCanvas4_23 As Button:
                         Appearance: |-
                             =If(
                                 !IsEmpty(
@@ -949,8 +688,7 @@ AppAssessmentsScreen_1 As screen:
                         BorderRadius: =20
                         BorderStyle: =BorderStyle.Solid
                         BorderThickness: =2
-                        DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-                        Visible: =gblIsAssessor
+                        DisplayMode: =DisplayMode.Edit
                         Height: =38
                         OnSelect: |-
                             =// Remove existing rating for this statement if any
@@ -968,11 +706,11 @@ AppAssessmentsScreen_1 As screen:
                             );
                         Text: ="5"
                         Width: =130
-                        X: =ButtonCanvas4_28.X + ButtonCanvas4_28.Width + 15
-                        Y: =ButtonCanvas4_28.Y
-                        ZIndex: =42
+                        X: =ButtonCanvas4_22.X + ButtonCanvas4_22.Width + 15
+                        Y: =ButtonCanvas4_22.Y
+                        ZIndex: =40
 
-                    Label1_34 As label:
+                    Label1_26 As label:
                         Align: =Align.Center
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
@@ -985,9 +723,9 @@ AppAssessmentsScreen_1 As screen:
                         Width: =130
                         X: =40
                         Y: =130
-                        ZIndex: =43
+                        ZIndex: =41
 
-                    Label1_35 As label:
+                    Label1_27 As label:
                         Align: =Align.Center
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
@@ -998,11 +736,11 @@ AppAssessmentsScreen_1 As screen:
                         Size: =10
                         Text: ="Never"
                         Width: =130
-                        X: =Label1_34.X + Label1_34.Width + 20
-                        Y: =Label1_34.Y
-                        ZIndex: =44
+                        X: =Label1_26.X + Label1_26.Width + 20
+                        Y: =Label1_26.Y
+                        ZIndex: =42
 
-                    Label1_36 As label:
+                    Label1_28 As label:
                         Align: =Align.Center
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
@@ -1013,11 +751,11 @@ AppAssessmentsScreen_1 As screen:
                         Size: =10
                         Text: ="Rarely"
                         Width: =130
-                        X: =Label1_35.X + Label1_35.Width + 20
-                        Y: =Label1_35.Y
-                        ZIndex: =45
+                        X: =Label1_27.X + Label1_27.Width + 20
+                        Y: =Label1_27.Y
+                        ZIndex: =43
 
-                    Label1_37 As label:
+                    Label1_29 As label:
                         Align: =Align.Center
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
@@ -1029,10 +767,10 @@ AppAssessmentsScreen_1 As screen:
                         Text: ="50% of the time"
                         Width: =130
                         X: =475
-                        Y: =Label1_36.Y
-                        ZIndex: =46
+                        Y: =Label1_28.Y
+                        ZIndex: =44
 
-                    Label1_38 As label:
+                    Label1_30 As label:
                         Align: =Align.Center
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
@@ -1043,11 +781,11 @@ AppAssessmentsScreen_1 As screen:
                         Size: =10
                         Text: ="Most of the time"
                         Width: =130
-                        X: =Label1_37.X + Label1_37.Width + 20
-                        Y: =Label1_37.Y
-                        ZIndex: =47
+                        X: =Label1_29.X + Label1_29.Width + 20
+                        Y: =Label1_29.Y
+                        ZIndex: =45
 
-                    Label1_39 As label:
+                    Label1_31 As label:
                         Align: =Align.Center
                         BorderColor: =App.Theme.Colors.Darker40
                         Color: =Color.DarkGray
@@ -1059,10 +797,10 @@ AppAssessmentsScreen_1 As screen:
                         Text: ="Always"
                         Width: =130
                         X: =765
-                        Y: =Label1_38.Y
-                        ZIndex: =48
+                        Y: =Label1_30.Y
+                        ZIndex: =46
 
-            Container27_4 As groupContainer.manualLayoutContainer:
+            Container27_3 As groupContainer.manualLayoutContainer:
                 AlignInContainer: =AlignInContainer.SetByContainer
                 BorderColor: =RGBA(230, 230, 230, 1)
                 BorderThickness: =1
@@ -1070,13 +808,13 @@ AppAssessmentsScreen_1 As screen:
                 Height: =65
                 LayoutMinHeight: =100
                 LayoutMinWidth: =250
-                ZIndex: =49
+                ZIndex: =5
 
-                ButtonCanvas16_12 As Button:
+                ButtonCanvas16_9 As Button:
                     Align: =Align.Justify
                     Appearance: ='ButtonCanvas.Appearance'.Subtle
                     BasePaletteColor: =RGBA(255, 255, 255, 1)
-                    DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
+                    DisplayMode: =DisplayMode.Edit
                     Font: =Font.'Open Sans'
                     FontColor: =RGBA(137, 137, 137, 1)
                     Height: =32
@@ -1087,236 +825,135 @@ AppAssessmentsScreen_1 As screen:
                     Width: =116
                     X: =60
                     Y: =20
-                    ZIndex: =50
+                    ZIndex: =48
 
-                ButtonCanvas16_13 As Button:
+                ButtonCanvas16_10 As Button:
                     Align: =Align.Justify
                     Appearance: ='ButtonCanvas.Appearance'.Subtle
                     BasePaletteColor: =RGBA(255, 255, 255, 1)
-                    DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-                    Visible: =gblIsAssessor
+                    DisplayMode: =DisplayMode.Edit
                     Font: =Font.'Open Sans'
                     FontColor: =RGBA(137, 137, 137, 1)
                     Height: =32
                     Icon: ="ChevronLeft"
                     IconStyle: ='ButtonCanvas.IconStyle'.Filled
                     Layout: ='ButtonCanvas.Layout'.TextOnly
-                    OnSelect: |+
-                        =// Persist ratings for current sub-dimension
-                        ForAll(
-                            Filter(
-                                Statements,
-                                SubDimensionLookup.Value = Text(selectedSubDimensionID)
-                            ),
-                            With(
-                                {
-                                    varRating: LookUp(colRatings, StatementId = Text(ThisRecord.ID), Rating),
-                                    ex: LookUp(
-                                        AssessmentRatings,
-                                        AssessmentLookup.Id = gblSelectedAssessment.ID && StatementLookup.Id = ThisRecord.ID
-                                    )
-                                },
-                                If(
-                                    !IsBlank(varRating),
-                                    Patch(
-                                        AssessmentRatings,
-                                        Coalesce(ex, Defaults(AssessmentRatings)),
-                                        {
-                                            Title: "Rating-" & Text(Now(), "[$-en-US]yyyymmdd-hhnnss"),
-                                            AssessmentLookup: {
-                                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                                Id: gblSelectedAssessment.ID,
-                                                Value: Coalesce(gblSelectedAssessment.Title, Text(gblSelectedAssessment.ID))
-                                            },
-                                            StatementLookup: {
-                                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                                Id: ThisRecord.ID,
-                                                Value: Coalesce(ThisRecord.StatementID, Text(ThisRecord.ID))
-                                            },
-                                            Rating: varRating
-                                        }
-                                    )
-                                )
-                            )
-                        );
-                        // Compute average score excluding NA (0)
-                        Set(varRated, Filter(colRatings, Rating > 0));
-                        Set(varAvg, If(CountRows(varRated) > 0, Average(varRated, Rating), Blank()));
-                        // Mark assessment as In Progress and store score
-                        Patch(
-                            Assessments,
-                            gblSelectedAssessment,
-                            {
-                                'Status ': { Value: "In Progress" },
-                                OverallScore: varAvg
-                            }
-                        );
-                        // Log history entry
-                        Patch(
-                            AssessmentHistory,
-                            Defaults(AssessmentHistory),
-                            {
-                                Title: "Saved Draft - " & Text(Now(), "[$-en-US]yyyymmdd-hhnnss"),
-                                AssessmentLookup: {
-                                    '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                    Id: gblSelectedAssessment.ID,
-                                    Value: Coalesce(gblSelectedAssessment.Title, Text(gblSelectedAssessment.ID))
-                                },
-                                ActionDate: Now(),
-                                ActionUser: {
-                                    '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                    Claims: "i:0#.f|membership|" & User().Email
-                                },
-                                Comments: "Saved draft for SubDimension ID: " & Text(selectedSubDimensionID)
-                            }
-                        );
-                        Notify("Draft saved", NotificationType.Success)
                     Text: ="Save as Draft"
                     VerticalAlign: =VerticalAlign.Middle
                     Width: =116
                     X: =654
                     Y: =20
-                    ZIndex: =51
+                    ZIndex: =49
 
-                ButtonCanvas16_14 As Button:
+                ButtonCanvas16_11 As Button:
                     Align: =Align.Justify
                     Appearance: ='ButtonCanvas.Appearance'.Primary
                     BasePaletteColor: =RGBA(0, 130, 101, 1)
-                    DisplayMode: =If(gblIsAssessor, DisplayMode.Edit, DisplayMode.Disabled)
-                    Visible: =gblIsAssessor
+                    DisplayMode: =DisplayMode.Edit
                     Font: =Font.'Open Sans'
                     FontColor: =RGBA(255, 255, 255, 1)
                     Height: =32
                     Icon: ="ChevronRight"
                     IconStyle: ='ButtonCanvas.IconStyle'.Filled
                     Layout: ='ButtonCanvas.Layout'.IconAfter
-                    OnSelect: |+
-                        =// Persist ratings for current sub-dimension
-                        ForAll(
-                            Filter(
-                                Statements,
-                                SubDimensionLookup.Value = Text(selectedSubDimensionID)
-                            ),
-                            With(
-                                {
-                                    varRating: LookUp(colRatings, StatementId = Text(ThisRecord.ID), Rating),
-                                    ex: LookUp(
-                                        AssessmentRatings,
-                                        AssessmentLookup.Id = gblSelectedAssessment.ID && StatementLookup.Id = ThisRecord.ID
-                                    )
-                                },
-                                If(
-                                    !IsBlank(varRating),
-                                    Patch(
-                                        AssessmentRatings,
-                                        Coalesce(ex, Defaults(AssessmentRatings)),
-                                        {
-                                            Title: "Rating-" & Text(Now(), "[$-en-US]yyyymmdd-hhnnss"),
-                                            AssessmentLookup: {
-                                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                                Id: gblSelectedAssessment.ID,
-                                                Value: Coalesce(gblSelectedAssessment.Title, Text(gblSelectedAssessment.ID))
-                                            },
-                                            StatementLookup: {
-                                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                                Id: ThisRecord.ID,
-                                                Value: Coalesce(ThisRecord.StatementID, Text(ThisRecord.ID))
-                                            },
-                                            Rating: varRating
-                                        }
-                                    )
-                                )
-                            )
-                        );
-                        // Compute average score excluding NA (0)
-                        Set(varRated, Filter(colRatings, Rating > 0));
-                        Set(varAvg, If(CountRows(varRated) > 0, Average(varRated, Rating), Blank()));
-                        // Build current sub-dimension statement id list
-                        ClearCollect(
-                            colCurrentStmtIds,
-                            ForAll(
-                                Filter(Statements, SubDimensionLookup.Value = Text(selectedSubDimensionID)),
-                                Text(ID)
-                            )
-                        );
-                        Set(varTotal, CountRows(colCurrentStmtIds));
-                        Set(varDone,
-                            CountRows(
-                                Filter(
-                                    colRatings,
-                                    Rating > 0 && !IsBlank(LookUp(colCurrentStmtIds, Value = StatementId))
-                                )
-                            )
-                        );
-                        If(
-                            varTotal > 0 && varDone = varTotal,
-                            Patch(
-                                Assessments,
-                                gblSelectedAssessment,
-                                {
-                                    'Status ': { Value: "Completed" },
-                                    CompletionDate: Now(),
-                                    OverallScore: varAvg
-                                }
-                            );
-                            // Log completion
-                            Patch(
-                                AssessmentHistory,
-                                Defaults(AssessmentHistory),
-                                {
-                                    Title: "Completed - " & Text(Now(), "[$-en-US]yyyymmdd-hhnnss"),
-                                    AssessmentLookup: {
-                                        '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                        Id: gblSelectedAssessment.ID,
-                                        Value: Coalesce(gblSelectedAssessment.Title, Text(gblSelectedAssessment.ID))
-                                    },
-                                    ActionDate: Now(),
-                                    ActionUser: {
-                                        '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                        Claims: "i:0#.f|membership|" & User().Email
-                                    },
-                                    Comments: "Assessment marked Completed for SubDimension ID: " & Text(selectedSubDimensionID)
-                                }
-                            );
-                            Notify("Assessment completed", NotificationType.Success),
-                            Patch(
-                                Assessments,
-                                gblSelectedAssessment,
-                                {
-                                    'Status ': { Value: "In Progress" },
-                                    OverallScore: varAvg
-                                }
-                            );
-                            // Log progress saved
-                            Patch(
-                                AssessmentHistory,
-                                Defaults(AssessmentHistory),
-                                {
-                                    Title: "Progress Saved - " & Text(Now(), "[$-en-US]yyyymmdd-hhnnss"),
-                                    AssessmentLookup: {
-                                        '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
-                                        Id: gblSelectedAssessment.ID,
-                                        Value: Coalesce(gblSelectedAssessment.Title, Text(gblSelectedAssessment.ID))
-                                    },
-                                    ActionDate: Now(),
-                                    ActionUser: {
-                                        '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
-                                        Claims: "i:0#.f|membership|" & User().Email
-                                    },
-                                    Comments: "Saved progress for SubDimension ID: " & Text(selectedSubDimensionID)
-                                }
-                            );
-                            Notify("Progress saved", NotificationType.Information)
-                        )
                     Text: ="Next"
                     VerticalAlign: =VerticalAlign.Middle
                     Width: =116
                     X: =792
                     Y: =20
-                    ZIndex: =52
+                    ZIndex: =50
 
+        Gallery1_3 As gallery.variableTemplateHeightGallery:
+            BorderColor: =RGBA(230, 230, 230, 1)
+            BorderThickness: =1
+            DelayItemLoading: =true
+            Height: =90
+            Items: =Assessments
+            Layout: =Layout.Vertical
+            LoadingSpinner: =LoadingSpinner.Data
+            ShowScrollbar: =false
+            TemplateSize: =85
+            Width: =Parent.Width
+            ZIndex: =2
 
+            Label12_9 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Size: =20
+                Text: ="Text"
+                X: =68
+                Y: =12
+                ZIndex: =9
 
+            Label13_15 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =13
+                Text: ="Assessment Type"
+                Width: =218
+                X: =698
+                Y: =12
+                ZIndex: =10
 
+            Label13_16 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =13
+                Text: ="Date"
+                X: =888
+                Y: =12
+                ZIndex: =11
 
+            Label13_17 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(137, 137, 137, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =13
+                Text: ="Text"
+                X: =68
+                Y: =39
+                ZIndex: =12
+
+            Label12_10 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =15
+                Text: ="Text"
+                X: =698
+                Y: =39
+                ZIndex: =13
+
+            Label12_11 As label:
+                BorderColor: =App.Theme.Colors.Darker40
+                Color: =RGBA(0, 0, 0, 1)
+                DisabledColor: =RGBA(166, 166, 166, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                PaddingLeft: =8
+                Size: =15
+                Text: ="Text"
+                X: =888
+                Y: =39
+                ZIndex: =14
+
+    GlobalHeaderSidePanelFooter_6 As GlobalHeaderSidePanelFooter:
+        ZIndex: =4
 
