@@ -1,0 +1,487 @@
+AppAdminScreen As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: =UpdateContext({ ctxAdminEntity: "Dimensions", ctxAdminRecord: Blank(), ctxIsAdmin: gblIsAdmin })
+
+    GlobalHeaderSidePanelFooter_5 As GlobalHeaderSidePanelFooter:
+
+    // Non-admin notice
+    lbl_AdminNotice As label:
+        Color: =RGBA(128, 0, 0, 1)
+        Font: =App.Theme.Font
+        FontWeight: =FontWeight.Semibold
+        Text: ="Admin access required to manage configuration."
+        Visible: =!gblIsAdmin
+        X: =40
+        Y: =GlobalHeaderSidePanelFooter_5.cntr_globalHeaderHeight + 20
+        ZIndex: =1
+
+    // Main admin area
+    cntr_AdminBody As groupContainer.manualLayoutContainer:
+        BorderColor: =RGBA(230, 230, 230, 1)
+        BorderThickness: =1
+        Height: =App.Height - GlobalHeaderSidePanelFooter_5.cntr_globalHeaderHeight
+        Visible: =gblIsAdmin
+        Width: =App.Width - GlobalHeaderSidePanelFooter_5.cntr_globalNavBarWidth
+        X: =GlobalHeaderSidePanelFooter_5.cntr_globalNavBarWidth
+        Y: =GlobalHeaderSidePanelFooter_5.cntr_globalHeaderHeight
+        ZIndex: =2
+
+        // Left: entity selection and list
+        cntr_AdminLeft As groupContainer.verticalAutoLayoutContainer:
+            BorderColor: =RGBA(230, 230, 230, 1)
+            BorderThickness: =1
+            DropShadow: =DropShadow.Light
+            FillPortions: =1
+            Height: =Parent.Height - 20
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutMode: =LayoutMode.Auto
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Width: =500
+            X: =16
+            Y: =16
+            ZIndex: =1
+
+            // Entity Picker
+            cntr_EntityPicker As groupContainer.horizontalAutoLayoutContainer:
+                Height: =46
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutDirection: =LayoutDirection.Horizontal
+                LayoutGap: =12
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =1
+
+                lbl_EntityTitle As label:
+                    Color: =RGBA(137, 137, 137, 1)
+                    Font: =App.Theme.Font
+                    Text: ="Entity"
+                    Width: =70
+                    ZIndex: =1
+
+                drp_AdminEntity As Dropdown.pcfdataset:
+                    Appearance: ='DropdownCanvas.Appearance'.FilledLighter
+                    DefaultSelectedItems: =[{ Value: ctxAdminEntity }]
+                    Items: =Table({Value: "Dimensions"}, {Value: "SubDimensions"}, {Value: "Statements"})
+                    OnChange: =UpdateContext({ ctxAdminEntity: Self.Selected.Value, ctxAdminRecord: Blank() })
+                    Width: =220
+                    ZIndex: =2
+
+                // New record button
+                btn_NewRecord As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Primary
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =32
+                    OnSelect: =UpdateContext({ ctxAdminRecord: Blank() })
+                    Text: ="New"
+                    Width: =90
+                    ZIndex: =3
+
+            // Search
+            cntr_AdminSearch As groupContainer.horizontalAutoLayoutContainer:
+                Height: =46
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutDirection: =LayoutDirection.Horizontal
+                LayoutGap: =12
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =2
+
+                lbl_Search As label:
+                    Color: =RGBA(137, 137, 137, 1)
+                    Font: =App.Theme.Font
+                    Text: ="Search"
+                    Width: =70
+                    ZIndex: =1
+
+                "txt_AdminSearch As 'Text input'":
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    BorderRadius: =10
+                    BorderStyle: =BorderStyle.Solid
+                    BorderThickness: =2
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =36
+                    Width: =350
+                    ZIndex: =2
+
+            // List
+            glry_AdminList As gallery.variableTemplateHeightGallery:
+                BorderColor: =RGBA(230, 230, 230, 1)
+                DelayItemLoading: =true
+                FillPortions: =1
+                Items: =
+                    Switch(
+                        ctxAdminEntity,
+                        "Dimensions", SortByColumns(Filter(Dimensions, IsBlank('txt_AdminSearch'.Value) || StartsWith(DimensionName, 'txt_AdminSearch'.Value)), "DimensionName"),
+                        "SubDimensions", SortByColumns(Filter(SubDimensions, IsBlank('txt_AdminSearch'.Value) || StartsWith(SubDimensionName, 'txt_AdminSearch'.Value)), "SubDimensionName"),
+                        "Statements", SortByColumns(Filter(Statements, IsBlank('txt_AdminSearch'.Value) || StartsWith(StatementText, 'txt_AdminSearch'.Value)), "StatementText"),
+                        Table()
+                    )
+                Layout: =Layout.Vertical
+                TemplateSize: =44
+                ZIndex: =3
+
+                // Row select
+                btn_Row As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Subtle
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =36
+                    OnSelect: =UpdateContext({ ctxAdminRecord: ThisItem })
+                    Text: =
+                        With({n: Coalesce(ThisItem.DimensionName, ThisItem.SubDimensionName, ThisItem.StatementText, ThisItem.Title)}, If(IsBlank(n), "(untitled)", n))
+                    Width: =Parent.Width - 16
+                    X: =8
+                    Y: =4
+                    ZIndex: =1
+
+        // Right: editor
+        cntr_AdminRight As groupContainer.verticalAutoLayoutContainer:
+            BorderColor: =RGBA(230, 230, 230, 1)
+            BorderThickness: =1
+            DropShadow: =DropShadow.Light
+            FillPortions: =2
+            Height: =Parent.Height - 20
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutMode: =LayoutMode.Auto
+            PaddingLeft: =16
+            PaddingRight: =16
+            PaddingTop: =16
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Width: =Parent.Width - 560
+            X: =532
+            Y: =16
+            ZIndex: =2
+
+            lbl_EditHeader As label:
+                Color: =RGBA(137, 137, 137, 1)
+                Font: =App.Theme.Font
+                FontWeight: =FontWeight.Semibold
+                Text: ="Edit " & ctxAdminEntity
+                ZIndex: =1
+
+            // Field set switches by entity
+            cntr_DimensionFields As groupContainer.verticalAutoLayoutContainer:
+                Visible: =ctxAdminEntity = "Dimensions"
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =2
+
+                lbl_DimName As label:
+                    Text: ="Dimension Name"
+                    ZIndex: =1
+                "txt_DimName As 'Text input'":
+                    Default: =Coalesce(ctxAdminRecord.DimensionName, ctxAdminRecord.Title)
+                    Height: =36
+                    ZIndex: =2
+
+                lbl_DimSort As label:
+                    Text: ="Sort Order"
+                    ZIndex: =3
+                "txt_DimSort As 'Text input'":
+                    Default: =Text(Coalesce(ctxAdminRecord.SortOrder, ""))
+                    Height: =36
+                    ZIndex: =4
+
+                lbl_DimId As label:
+                    Text: ="Dimension ID (optional)"
+                    ZIndex: =5
+                "txt_DimID As 'Text input'":
+                    Default: =Text(Coalesce(ctxAdminRecord.DimensionID, ""))
+                    Height: =36
+                    ZIndex: =6
+
+            cntr_SubDimensionFields As groupContainer.verticalAutoLayoutContainer:
+                Visible: =ctxAdminEntity = "SubDimensions"
+                LayoutMode: =LayoutMode.Auto
+            ZIndex: =3
+
+    // Roles management (admin only)
+    cntr_AdminRoles As groupContainer.verticalAutoLayoutContainer:
+        BorderColor: =RGBA(230, 230, 230, 1)
+        BorderThickness: =1
+        DropShadow: =DropShadow.Light
+        FillPortions: =0
+        Height: =300
+        LayoutAlignItems: =LayoutAlignItems.Stretch
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutMode: =LayoutMode.Auto
+        PaddingLeft: =16
+        PaddingRight: =16
+        PaddingTop: =16
+        RadiusBottomLeft: =8
+        RadiusBottomRight: =8
+        RadiusTopLeft: =8
+        RadiusTopRight: =8
+        Visible: =gblIsAdmin
+        Width: =App.Width - GlobalHeaderSidePanelFooter_5.cntr_globalNavBarWidth - 32
+        X: =GlobalHeaderSidePanelFooter_5.cntr_globalNavBarWidth + 16
+        Y: =App.Height - 320
+        ZIndex: =3
+
+        lbl_RolesHeader As label:
+            Color: =RGBA(137, 137, 137, 1)
+            Font: =App.Theme.Font
+            FontWeight: =FontWeight.Semibold
+            Text: ="App Roles (Admin/Assessor)"
+            ZIndex: =1
+
+        cntr_RoleEditor As groupContainer.horizontalAutoLayoutContainer:
+            Height: =40
+            LayoutAlignItems: =LayoutAlignItems.Center
+            LayoutDirection: =LayoutDirection.Horizontal
+            LayoutGap: =10
+            LayoutMode: =LayoutMode.Auto
+            ZIndex: =2
+
+            drp_RoleType As Dropdown.pcfdataset:
+                Appearance: ='DropdownCanvas.Appearance'.FilledLighter
+                DefaultSelectedItems: =[{ Value: "Assessor" }]
+                Items: =Table({Value: "Admin"}, {Value: "Assessor"})
+                Width: =180
+                ZIndex: =1
+
+            "txt_RoleEmail As 'Text input'":
+                BorderColor: =RGBA(230, 230, 230, 1)
+                BorderRadius: =8
+                BorderStyle: =BorderStyle.Solid
+                BorderThickness: =2
+                DisplayMode: =DisplayMode.Edit
+                Height: =36
+                HintText: ="user@domain.com"
+                Width: =300
+                ZIndex: =2
+
+            btn_AddRole As Button:
+                Appearance: ='ButtonCanvas.Appearance'.Primary
+                DisplayMode: =DisplayMode.Edit
+                Height: =32
+                OnSelect: |-
+                    =Patch(
+                        AppRoles,
+                        Defaults(AppRoles),
+                        {
+                            Title: 'txt_RoleEmail'.Value,
+                            Role: { Value: drp_RoleType.Selected.Value },
+                            User: {
+                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                                Claims: "i:0#.f|membership|" & 'txt_RoleEmail'.Value
+                            }
+                        }
+                    );
+                    Notify("Role added", NotificationType.Success)
+                Text: ="Add"
+                Width: =120
+                ZIndex: =3
+
+        glry_Roles As gallery.variableTemplateHeightGallery:
+            BorderColor: =RGBA(230, 230, 230, 1)
+            DelayItemLoading: =true
+            FillPortions: =1
+            Items: =AppRoles
+            Layout: =Layout.Vertical
+            TemplateSize: =36
+            ZIndex: =3
+
+            lbl_RoleUser As label:
+                Color: =RGBA(0, 0, 0, 1)
+                Font: =App.Theme.Font
+                Size: =12
+                Text: =Coalesce(ThisItem.User.DisplayName, ThisItem.Title)
+                Width: =300
+                X: =12
+                Y: =8
+                ZIndex: =1
+
+            lbl_RoleType As label:
+                Color: =RGBA(0, 0, 0, 1)
+                Font: =App.Theme.Font
+                Size: =12
+                Text: =If(IsBlank(ThisItem.Role.Value), ThisItem.Role, ThisItem.Role.Value)
+                Width: =120
+                X: =330
+                Y: =8
+                ZIndex: =2
+
+            btn_DeleteRole As Button:
+                Appearance: ='ButtonCanvas.Appearance'.Subtle
+                DisplayMode: =DisplayMode.Edit
+                Height: =28
+                OnSelect: =Remove(AppRoles, ThisItem)
+                Text: ="Delete"
+                Width: =90
+                X: =Parent.Width - 100
+                Y: =6
+                ZIndex: =3
+                lbl_SubName As label:
+                    Text: ="Sub-Dimension Name"
+                    ZIndex: =1
+                "txt_SubName As 'Text input'":
+                    Default: =Coalesce(ctxAdminRecord.SubDimensionName, ctxAdminRecord.Title)
+                    Height: =36
+                    ZIndex: =2
+
+                lbl_SubDim As label:
+                    Text: ="Dimension"
+                    ZIndex: =3
+                drp_Sub_Dimension As Dropdown.pcfdataset:
+                    Appearance: ='DropdownCanvas.Appearance'.FilledLighter
+                    DefaultSelectedItems: =If(!IsBlank(ctxAdminRecord.DimensionLookup.Id), [LookUp(Dimensions, ID = ctxAdminRecord.DimensionLookup.Id)], [])
+                    Items: =Dimensions
+                    Width: =320
+                    ZIndex: =4
+
+                lbl_SubSort As label:
+                    Text: ="Sort Order"
+                    ZIndex: =5
+                "txt_SubSort As 'Text input'":
+                    Default: =Text(Coalesce(ctxAdminRecord.SortOrder, ""))
+                    Height: =36
+                    ZIndex: =6
+
+                lbl_SubId As label:
+                    Text: ="Sub-Dimension ID (optional)"
+                    ZIndex: =7
+                "txt_SubID As 'Text input'":
+                    Default: =Text(Coalesce(ctxAdminRecord.SubDimensionID, ""))
+                    Height: =36
+                    ZIndex: =8
+
+            cntr_StatementFields As groupContainer.verticalAutoLayoutContainer:
+                Visible: =ctxAdminEntity = "Statements"
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =4
+
+                lbl_StmtText As label:
+                    Text: ="Statement Text"
+                    ZIndex: =1
+                "txt_StmtText As 'Text input'":
+                    Default: =Coalesce(ctxAdminRecord.StatementText, ctxAdminRecord.Title)
+                    Height: =72
+                    ZIndex: =2
+
+                lbl_StmtSub As label:
+                    Text: ="Sub-Dimension"
+                    ZIndex: =3
+                drp_Stmt_SubDimension As Dropdown.pcfdataset:
+                    Appearance: ='DropdownCanvas.Appearance'.FilledLighter
+                    DefaultSelectedItems: =If(!IsBlank(ctxAdminRecord.SubDimensionLookup.Id), [LookUp(SubDimensions, ID = ctxAdminRecord.SubDimensionLookup.Id)], [])
+                    Items: =SubDimensions
+                    Width: =320
+                    ZIndex: =4
+
+                lbl_StmtSort As label:
+                    Text: ="Sort Order"
+                    ZIndex: =5
+                "txt_StmtSort As 'Text input'":
+                    Default: =Text(Coalesce(ctxAdminRecord.SortOrder, ""))
+                    Height: =36
+                    ZIndex: =6
+
+                lbl_StmtID As label:
+                    Text: ="Statement ID (optional)"
+                    ZIndex: =7
+                "txt_StmtID As 'Text input'":
+                    Default: =Text(Coalesce(ctxAdminRecord.StatementID, ""))
+                    Height: =36
+                    ZIndex: =8
+
+            // Action buttons
+            cntr_AdminActions As groupContainer.horizontalAutoLayoutContainer:
+                Height: =46
+                LayoutAlignItems: =LayoutAlignItems.Center
+                LayoutDirection: =LayoutDirection.Horizontal
+                LayoutGap: =12
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =5
+
+                btn_Save As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Primary
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =32
+                    OnSelect: |-
+                        =// Build and save according to entity
+                        Switch(
+                            ctxAdminEntity,
+                            "Dimensions",
+                                Patch(
+                                    Dimensions,
+                                    Coalesce(ctxAdminRecord, Defaults(Dimensions)),
+                                    {
+                                        Title: 'txt_DimName'.Value,
+                                        DimensionName: 'txt_DimName'.Value,
+                                        SortOrder: Value('txt_DimSort'.Value),
+                                        DimensionID: If(!IsBlank('txt_DimID'.Value), Value('txt_DimID'.Value), Blank())
+                                    }
+                                ),
+                            "SubDimensions",
+                                Patch(
+                                    SubDimensions,
+                                    Coalesce(ctxAdminRecord, Defaults(SubDimensions)),
+                                    {
+                                        Title: 'txt_SubName'.Value,
+                                        SubDimensionName: 'txt_SubName'.Value,
+                                        SortOrder: Value('txt_SubSort'.Value),
+                                        SubDimensionID: If(!IsBlank('txt_SubID'.Value), Value('txt_SubID'.Value), Blank()),
+                                        DimensionLookup: If(
+                                            !IsBlank(drp_Sub_Dimension.Selected.ID),
+                                            {
+                                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+                                                Id: drp_Sub_Dimension.Selected.ID,
+                                                Value: Coalesce(drp_Sub_Dimension.Selected.Title, drp_Sub_Dimension.Selected.DimensionName)
+                                            },
+                                            Blank()
+                                        )
+                                    }
+                                ),
+                            "Statements",
+                                Patch(
+                                    Statements,
+                                    Coalesce(ctxAdminRecord, Defaults(Statements)),
+                                    {
+                                        Title: 'txt_StmtText'.Value,
+                                        StatementText: 'txt_StmtText'.Value,
+                                        SortOrder: Value('txt_StmtSort'.Value),
+                                        StatementID: If(!IsBlank('txt_StmtID'.Value), Value('txt_StmtID'.Value), Blank()),
+                                        SubDimensionLookup: If(
+                                            !IsBlank(drp_Stmt_SubDimension.Selected.ID),
+                                            {
+                                                '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+                                                Id: drp_Stmt_SubDimension.Selected.ID,
+                                                Value: Coalesce(drp_Stmt_SubDimension.Selected.Title, drp_Stmt_SubDimension.Selected.SubDimensionName)
+                                            },
+                                            Blank()
+                                        )
+                                    }
+                                )
+                        );
+                        Notify("Saved", NotificationType.Success);
+                        UpdateContext({ ctxAdminRecord: Blank() })
+                    Text: ="Save"
+                    Width: =120
+                    ZIndex: =1
+
+                btn_Delete As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Subtle
+                    DisplayMode: =If(IsBlank(ctxAdminRecord), DisplayMode.Disabled, DisplayMode.Edit)
+                    Height: =32
+                    OnSelect: =If(!IsBlank(ctxAdminRecord), Switch(ctxAdminEntity, "Dimensions", Remove(Dimensions, ctxAdminRecord), "SubDimensions", Remove(SubDimensions, ctxAdminRecord), "Statements", Remove(Statements, ctxAdminRecord))); UpdateContext({ ctxAdminRecord: Blank() }); Notify("Deleted", NotificationType.Success)
+                    Text: ="Delete"
+                    Width: =120
+                    ZIndex: =2
+
+                btn_Cancel As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Subtle
+                    DisplayMode: =DisplayMode.Edit
+                    Height: =32
+                    OnSelect: =UpdateContext({ ctxAdminRecord: Blank() })
+                    Text: ="Cancel"
+                    Width: =120
+                    ZIndex: =3

@@ -1,0 +1,423 @@
+AppTeamsScreen_1 As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+
+    cntr_DisabledTeamsScreen_1 As groupContainer.verticalAutoLayoutContainer:
+        DropShadow: =DropShadow.Light
+        Fill: =RGBA(0, 0, 0, 0.6)
+        Height: =Parent.Height
+        LayoutDirection: =LayoutDirection.Vertical
+        LayoutJustifyContent: =LayoutJustifyContent.Center
+        LayoutMode: =LayoutMode.Auto
+        RadiusBottomLeft: =4
+        RadiusBottomRight: =4
+        RadiusTopLeft: =4
+        RadiusTopRight: =4
+        Visible: =gblIsAdmin && varShowNewTeamDialog
+        Width: =Parent.Width
+        ZIndex: =1
+
+        cntr_NewTeamModal_1 As groupContainer.verticalAutoLayoutContainer:
+            DropShadow: =DropShadow.Light
+            Fill: =Color.White
+            Height: =Parent.Height*80%
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutMinHeight: =100
+            LayoutMinWidth: =250
+            LayoutMode: =LayoutMode.Auto
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Visible: =gblIsAdmin && varShowNewTeamDialog
+            ZIndex: =1
+
+            cntr_NewTeamModelHeader_1 As groupContainer.horizontalAutoLayoutContainer:
+                DropShadow: =DropShadow.Light
+                Height: =70
+                LayoutMinHeight: =100
+                LayoutMinWidth: =250
+                LayoutMode: =LayoutMode.Auto
+                ZIndex: =2
+
+                lbl_NewTeamModalTitle_1 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    PaddingLeft: =30
+                    Size: =15
+                    Text: ="Add New Team"
+                    Width: =450
+                    ZIndex: =3
+
+                Icon1_1 As icon.Cancel:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =Color.DarkGray
+                    DisabledBorderColor: =RGBA(166, 166, 166, 1)
+                    DisabledColor: =RGBA(244, 244, 244, 1)
+                    Height: =40
+                    Icon: =Icon.Cancel
+                    OnSelect: =Set(varShowNewTeamDialog, false);
+                    Width: =32
+                    X: =388
+                    Y: =8
+                    ZIndex: =4
+
+            cntr_NewTeamModalBody_1 As groupContainer.manualLayoutContainer:
+                DropShadow: =DropShadow.Light
+                LayoutMinHeight: =100
+                LayoutMinWidth: =250
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                ZIndex: =5
+
+                lbl_NewTeamTitle_1 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    PaddingLeft: =6
+                    Size: =15
+                    Text: ="Team Name*"
+                    X: =28
+                    Y: =52
+                    ZIndex: =6
+
+                "txt_NewTeamInputName_1 As 'Text input'":
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    BorderRadius: =10
+                    BorderStyle: =BorderStyle.Solid
+                    BorderThickness: =2
+                    DisplayMode: =DisplayMode.Edit
+                    Fill: =RGBA(255, 255, 255, 1)
+                    Font: =Font.'Open Sans'
+                    FontSize: =20
+                    Height: =48
+                    Width: =436
+                    X: =35
+                    Y: =92
+                    ZIndex: =7
+
+                lbl_NewTeamVerticalTitle_1 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    PaddingLeft: =6
+                    Size: =15
+                    Text: ="Vertical*"
+                    X: =28
+                    Y: =175
+                    ZIndex: =8
+
+                drpdwn_NewTeamVertical_1 As Dropdown.pcfdataset:
+                    Appearance: ='DropdownCanvas.Appearance'.Outline
+                    BasePaletteColor: =
+                    BorderColor: =RGBA(230, 230, 230, 1)
+                    BorderRadius: =10
+                    BorderStyle: =BorderStyle.Solid
+                    BorderThickness: =2
+                    DisplayMode: =DisplayMode.Edit
+                    FontSize: =20
+                    Height: =48
+                    Items: =Verticals
+                    Width: =436
+                    X: =35
+                    Y: =215
+                    ZIndex: =9
+
+                    Title2_1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Title"
+                        FieldName: ="Title"
+                        FieldType: ="s"
+                        FieldVariantName: ="textualColumn"
+                        Order: =1
+                        ZIndex: =10
+
+                    TeamName1_1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="TeamName"
+                        FieldName: ="TeamName"
+                        FieldType: ="s"
+                        FieldVariantName: ="textualColumn"
+                        Order: =2
+                        ZIndex: =11
+
+                    ScrumMaster1_1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="ScrumMaster"
+                        FieldName: ="ScrumMaster"
+                        FieldType: ="E"
+                        FieldVariantName: ="textualColumn"
+                        Order: =3
+                        ZIndex: =12
+
+                    Status1_1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Status"
+                        FieldName: ="Status"
+                        FieldType: ="E"
+                        FieldVariantName: ="textualColumn"
+                        Order: =4
+                        ZIndex: =13
+
+                    Vertical1_1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Vertical"
+                        FieldName: ="Vertical"
+                        FieldType: ="E"
+                        FieldVariantName: ="textualColumn"
+                        Order: =5
+                        ZIndex: =14
+
+                    Attachments2_1 As PowerApps_CoreControls_DropdownCanvasTemplate_dataField.textualColumn:
+                        FieldDisplayName: ="Attachments"
+                        FieldName: ="{Attachments}"
+                        FieldType: ="r*"
+                        FieldVariantName: ="textualColumn"
+                        Order: =6
+                        ZIndex: =15
+
+                lbl_NewTeamSMTitle_1 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    PaddingLeft: =6
+                    Size: =15
+                    Text: ="Scrum Master"
+                    X: =28
+                    Y: =310
+                    ZIndex: =16
+
+                "txt_NewTeamSMName_1 As 'Text input'":
+                    BorderRadius: =10
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontColor: =Color.DarkGray
+                    FontSize: =20
+                    FontWeight: =FontWeight.Normal
+                    Height: =48
+                    Value: =User().FullName
+                    Width: =436
+                    X: =35
+                    Y: =350
+                    ZIndex: =17
+
+            cntr_NewTeamModalFooter_1 As groupContainer.manualLayoutContainer:
+                DropShadow: =DropShadow.Light
+                Height: =100
+                LayoutMinHeight: =100
+                LayoutMinWidth: =250
+                RadiusBottomLeft: =4
+                RadiusBottomRight: =4
+                RadiusTopLeft: =4
+                RadiusTopRight: =4
+                ZIndex: =18
+
+                btn_NewTeamCancel_1 As Button:
+                    Appearance: ='ButtonCanvas.Appearance'.Secondary
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontSize: =15
+                    Height: =40
+                    IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                    OnSelect: =Set(varShowNewTeamDialog, false);
+                    Text: ="Cancel"
+                    Width: =96
+                    X: =254
+                    Y: =28
+                    ZIndex: =19
+
+                btn_NewTeamSubmit_1 As Button:
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontSize: =15
+                    FontWeight: =FontWeight.Semibold
+                    Height: =40
+                    DisplayMode: =If(gblIsAdmin, DisplayMode.Edit, DisplayMode.Disabled)
+                    OnSelect: |+
+                        =If(
+                            IsBlank(txt_NewTeamInputName_1.Value) || IsBlank(drpdwn_NewTeamVertical_1.Selected.ID),
+                            // Validation failed
+                            Notify(
+                                "Please enter Team Name and select a Vertical",
+                                NotificationType.Warning
+                            ),
+                            // Validation passed, submit data
+                            Patch(
+                                'Teams',
+                                Defaults('Teams'),
+                                {
+                                    Title: txt_NewTeamInputName_1.Value,
+                                    TeamName: txt_NewTeamInputName_1.Value,
+                                    ScrumMaster: txt_NewTeamSMName_1.Value,
+                                    Status: {
+                                        '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+                                        Value: "Active"
+                                    },
+                                    Vertical: {
+                                    '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+                                    Id: drpdwn_NewTeamVertical_1.Selected.ID,
+                                    Value: drpdwn_NewTeamVertical_1.Selected.Title
+                                }
+                        
+                                }
+                            );
+                            // Hide modal and refresh teams
+                        Set(
+                                varShowNewTeamDialog,
+                                false
+                            );
+                            Notify(
+                                "Team successfully created",
+                                NotificationType.Success
+                            )
+                        )
+                        
+                        
+                        
+                    Text: ="Submit"
+                    Width: =96
+                    X: =372
+                    Y: =28
+                    ZIndex: =20
+
+    cntr_TeamsBody_1 As groupContainer.manualLayoutContainer:
+        Height: =App.Height - GlobalHeaderSidePanelFooter_7.cntr_globalHeaderHeight
+        Width: =App.Width - GlobalHeaderSidePanelFooter_7.cntr_globalNavBarWidth
+        X: =GlobalHeaderSidePanelFooter_7.cntr_globalNavBarWidth
+        Y: =GlobalHeaderSidePanelFooter_7.cntr_globalHeaderHeight
+        ZIndex: =2
+
+        btn_NewTeam_1 As Button:
+            AcceptsFocus: =true
+            AccessibleLabel: =""
+            Align: =""
+            Appearance: ='ButtonCanvas.Appearance'.Primary
+            BasePaletteColor: =RGBA(0, 130, 101, 1)
+            BorderStyle: =""
+            ContentLanguage: =""
+            DisplayMode: =DisplayMode.Edit
+            Font: =Font.'Segoe UI'
+            FontItalic: =false
+            FontSize: =20
+            FontStrikethrough: =false
+            FontUnderline: =false
+            FontWeight: =""
+            Height: =48
+            Icon: ="Add"
+            IconRotation: =0
+            IconStyle: ='ButtonCanvas.IconStyle'.Filled
+            Layout: ='ButtonCanvas.Layout'.IconBefore
+            OnSelect: |-
+                =Set(varShowNewTeamDialog, true);
+                Reset(txt_NewTeamInputName_1);
+                Reset(drpdwn_NewTeamVertical_1);
+            TabIndex: =0
+            Text: ="New Team"
+            Tooltip: =""
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =gblIsAdmin
+            Width: =236
+            X: =824
+            Y: =24
+            ZIndex: =21
+
+        Label1_1 As label:
+            BorderColor: =App.Theme.Colors.Darker40
+            Color: =RGBA(0, 0, 0, 1)
+            DisabledColor: =RGBA(166, 166, 166, 1)
+            Font: =App.Theme.Font
+            Size: =13
+            Text: =varShowNewTeamDialog
+            X: =40
+            Y: =40
+            ZIndex: =22
+
+        Gallery3_1 As gallery.galleryHorizontal:
+            '#CopilotOverlayLabel': ="Filtered"
+            BorderColor: =App.Theme.Colors.Darker40
+            DelayItemLoading: =true
+            Height: =481
+            Items: =Teams
+            LoadingSpinner: =LoadingSpinner.Data
+            TemplatePadding: =20
+            TemplateSize: =510
+            Width: =1094
+            WrapCount: =2
+            Y: =96
+            ZIndex: =23
+
+            Container7_1 As groupContainer.manualLayoutContainer:
+                BorderColor: =RGBA(230, 230, 230, 1)
+                BorderThickness: =1
+                DropShadow: =DropShadow.Light
+                RadiusBottomLeft: =10
+                RadiusBottomRight: =10
+                RadiusTopLeft: =10
+                RadiusTopRight: =10
+                Width: =510
+                ZIndex: =24
+
+                Label2_2 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(166, 166, 166, 1)
+                    Font: =App.Theme.Font
+                    FontWeight: =FontWeight.Semibold
+                    Size: =15
+                    Text: =ThisItem.TeamName
+                    X: =24
+                    Y: =16
+                    ZIndex: =25
+
+                Label2_3 As label:
+                    BorderColor: =App.Theme.Colors.Darker40
+                    Color: =RGBA(0, 0, 0, 1)
+                    DisabledColor: =RGBA(191, 191, 191, 1)
+                    Font: =App.Theme.Font
+                    Height: =37
+                    Size: =13
+                    Text: =ThisItem.Vertical.Value
+                    Width: =216
+                    X: =24
+                    Y: =56
+                    ZIndex: =26
+
+                ButtonCanvas7_1 As Button:
+                    AcceptsFocus: =true
+                    AccessibleLabel: =""
+                    Align: =""
+                    Appearance: ="Primary"
+                    BasePaletteColor: =RGBA(0, 130, 101, 1)
+                    BorderStyle: =""
+                    ContentLanguage: =""
+                    DisplayMode: =DisplayMode.Edit
+                    Font: =Font.'Open Sans'
+                    FontItalic: =false
+                    FontSize: =16
+                    FontStrikethrough: =false
+                    FontUnderline: =false
+                    FontWeight: =""
+                    Height: =39
+                    Icon: =""
+                    IconRotation: =0
+                    IconStyle: ="Outline"
+                    Layout: ="Icon before"
+                    OnSelect: =false
+                    TabIndex: =0
+                    Text: ="Assess Team"
+                    Tooltip: =""
+                    VerticalAlign: =""
+                    Visible: =true
+                    Width: =461
+                    X: =24
+                    Y: =143
+                    ZIndex: =27
+
+    GlobalHeaderSidePanelFooter_7 As GlobalHeaderSidePanelFooter:
+        ZIndex: =3
+

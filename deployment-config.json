@@ -1,0 +1,28 @@
+{
+  "organization": {
+    "name": "Speridian Technologies",
+    "sharePointSiteUrl": "https://speridiantec-my.sharepoint.com/personal/sandeep_varma_speridian_com",
+    "sharePointListsPath": "_layouts/15/lists.aspx",
+    "adminEmails": [
+      "sandeep.varma@speridian.com",
+      "admin@speridian.com"
+    ]
+  },
+  "dataSourceTableIds": {
+    "AssessmentHistory": "d2a4100f-33b2-4c54-8bc0-fc0534b7cf66",
+    "AssessmentRatings": "b6fa709f-8751-4350-9ffc-4b63678f6b6e",
+    "Assessments": "4d7ff8af-4730-4a05-822b-3f43ae83b0d6",
+    "Dimensions": "d4746dba-1eab-4fa1-8521-c1800bd48af9",
+    "Statements": "9b24ec75-a120-4ff0-83cb-fc696ff28902",
+    "SubDimensions": "31e9f8a5-7b31-431a-97d9-e007e1facd26",
+    "Teams": "036f502b-9ef8-4a52-bbf5-e0662c227b7d",
+    "Verticals": "53a4187d-572d-47f7-a1f3-efa4340264c6"
+  },
+  "connections": {
+    "sharePointConnectionId": "633c5160-5190-4e88-bf51-8fd7b33cfbeb",
+    "office365UsersConnectionId": "137ae2a8-d786-40ad-bba5-3ee10b969486"
+  },
+  "instructions": {
+    "note": "This file contains the configuration values that need to be updated when deploying to a new organization. See DEPLOYMENT-INSTRUCTIONS.md for detailed steps."
+  }
+}

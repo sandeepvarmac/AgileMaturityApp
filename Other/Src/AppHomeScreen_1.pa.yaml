@@ -1,0 +1,434 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  AppHomeScreen_1:
+    Children:
+      - cntr_Body_2:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =App.Height - GlobalHeaderSidePanelFooter_3.cntr_globalHeaderHeight
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =App.Width - GlobalHeaderSidePanelFooter_3.cntr_globalNavBarWidth
+            X: =GlobalHeaderSidePanelFooter_3.cntr_globalNavBarWidth
+            Y: =GlobalHeaderSidePanelFooter_3.cntr_globalHeaderHeight
+          Children:
+            - btn_NewAssessment_2:
+                Control: Button@0.0.45
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Primary
+                  BasePaletteColor: =RGBA(0, 130, 101, 1)
+                  Font: =Font.'Segoe UI'
+                  FontSize: =20
+                  Height: =48
+                  Layout: ='ButtonCanvas.Layout'.TextOnly
+                  OnSelect: =Navigate(AppHomeScreen_1)
+                  Text: ="New Assessment"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =236
+                  X: =824
+                  Y: =24
+            - cntr_BodyCards_2:
+                Control: GroupContainer@1.3.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderStyle: =BorderStyle.None
+                  DropShadow: =DropShadow.None
+                  Height: =150
+                  PaddingBottom: =5
+                  PaddingLeft: =5
+                  PaddingRight: =5
+                  PaddingTop: =5
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Width: =1025
+                  X: =40
+                  Y: =(GlobalHeaderSidePanelFooter_3.cntr_globalHeaderHeight + btn_NewAssessment_2.Y)
+                Children:
+                  - cntr_TeamsAssessedCard_2:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =136
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        X: =5
+                        Y: =5
+                      Children:
+                        - lbl_TeamAssessedText_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Color: =RGBA(102, 102, 102, 1)
+                              Font: =Font.'Open Sans'
+                              Text: ="Teams Assessed"
+                              X: =8
+                              Y: =8
+                        - icon_TeamAssessed_2:
+                            Control: Icon@0.0.7
+                            Properties:
+                              Icon: ="People"
+                              IconColor: =RGBA(15, 53, 87, 1)
+                              X: =436
+                              Y: =12
+                        - lbl_TeamAssessedValue_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Color: =RGBA(15, 53, 87, 1)
+                              FontWeight: =FontWeight.Bold
+                              Size: =24
+                              Text: ="3/5"
+                              X: =8
+                              Y: =66
+                  - cntr_AssessmentsYTDCard_2:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =136
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        X: =cntr_TeamsAssessedCard_2.Width + 20
+                        Y: =5
+                      Children:
+                        - lbl_AssessmentsYTDText_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Color: =RGBA(102, 102, 102, 1)
+                              Font: =Font.'Open Sans'
+                              Text: ="Assessments YTD"
+                              Width: =163
+                              X: =16
+                              Y: =8
+                        - icon_AssessmentsYTD_2:
+                            Control: Icon@0.0.7
+                            Properties:
+                              Icon: ="Calendar"
+                              IconColor: =RGBA(15, 53, 87, 1)
+                              X: =435
+                              Y: =12
+                        - lbl_AssessmentsYTDValue_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Color: =RGBA(15, 53, 87, 1)
+                              FontWeight: =FontWeight.Bold
+                              Size: =24
+                              Text: ="24"
+                              X: =16
+                              Y: =63
+            - cntr_DataGrid_2:
+                Control: GroupContainer@1.3.0
+                Variant: AutoLayout
+                Properties:
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =1
+                  Height: =365
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Vertical
+                  RadiusBottomLeft: =10
+                  RadiusBottomRight: =10
+                  RadiusTopLeft: =10
+                  RadiusTopRight: =10
+                  Width: =1015
+                  X: =45
+                  Y: =cntr_BodyCards_2.Height + cntr_BodyCards_2.Y + 15
+                Children:
+                  - lbl_DataGridText_2:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Justify
+                        BorderStyle: =BorderStyle.None
+                        BorderThickness: =1
+                        FontWeight: =FontWeight.Semibold
+                        Height: =50
+                        PaddingLeft: =10
+                        Text: ="Team Status Overview"
+                  - icn_DataGridTitleBorder_2:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        BorderColor: =RGBA(102, 102, 102, 1)
+                        BorderStyle: =BorderStyle.None
+                        Color: =RGBA(166, 166, 166, 1)
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(166, 166, 166, 1)
+                        FocusedBorderThickness: =0
+                        Height: =1
+                        Icon: =Icon.HorizontalLine
+                  - cntr_DataGridHeader_2:
+                      Control: GroupContainer@1.3.0
+                      Variant: AutoLayout
+                      Properties:
+                        DropShadow: =DropShadow.None
+                        FillPortions: =0
+                        Height: =70
+                        LayoutDirection: =LayoutDirection.Horizontal
+                        LayoutMinWidth: =0
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                      Children:
+                        - lbl_Team_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Team"
+                              Width: =126
+                              Wrap: =false
+                        - lbl_Vertical_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Vertical"
+                              Wrap: =false
+                        - lbl_Type_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Type"
+                              Width: =100
+                              Wrap: =false
+                        - lbl_Status_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              Text: ="Status"
+                              Width: =105
+                              Wrap: =false
+                        - lbl_Period_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Period"
+                              Width: =100
+                              Wrap: =false
+                        - lbl_LastAssessed_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Last Assessed"
+                              Width: =135
+                              Wrap: =false
+                        - lbl_OverallScore_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Overall Score"
+                              Width: =135
+                              Wrap: =false
+                        - lbl_Action_2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Justify
+                              AlignInContainer: =AlignInContainer.Stretch
+                              BorderColor: =RGBA(230, 230, 230, 1)
+                              Color: =RGBA(102, 102, 102, 1)
+                              FontWeight: =FontWeight.Semibold
+                              LayoutMinHeight: =0
+                              PaddingLeft: =10
+                              Text: ="Action"
+                              Width: =126
+                              Wrap: =false
+                  - glry_DataGrid_2:
+                      Control: Gallery@2.15.0
+                      Variant: VariableHeight
+                      Properties:
+                        Items: =Assessments
+                        LayoutMinHeight: =0
+                        TemplatePadding: =0
+                        TemplateSize: =50
+                      Children:
+                        - cntr_DataGridRows_2:
+                            Control: GroupContainer@1.3.0
+                            Variant: ManualLayout
+                            Properties:
+                              DropShadow: =DropShadow.None
+                              Height: =Parent.TemplateHeight
+                              RadiusBottomLeft: =0
+                              RadiusBottomRight: =0
+                              RadiusTopLeft: =0
+                              RadiusTopRight: =0
+                              Width: =Parent.TemplateWidth
+                            Children:
+                              - cntr_DataGridColumns_2:
+                                  Control: GroupContainer@1.3.0
+                                  Variant: AutoLayout
+                                  Properties:
+                                    BorderColor: =RGBA(230, 230, 230, 1)
+                                    BorderThickness: =2
+                                    DropShadow: =DropShadow.Semilight
+                                    Height: =Parent.Height
+                                    LayoutDirection: =LayoutDirection.Horizontal
+                                    RadiusBottomLeft: =0
+                                    RadiusBottomRight: =0
+                                    RadiusTopLeft: =0
+                                    RadiusTopRight: =0
+                                    Width: =Parent.Width
+                                  Children:
+                                    - lbl_TeamValue_2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          Align: =Align.Justify
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          BorderColor: =RGBA(230, 230, 230, 1)
+                                          FontWeight: =FontWeight.Semibold
+                                          LayoutMinHeight: =0
+                                          PaddingLeft: =10
+                                          Text: =ThisItem.TeamLookup.Value
+                                          Width: =126
+                                          Wrap: =false
+                                    - lbl_VerticalValue_2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          LayoutMinHeight: =0
+                                          PaddingLeft: =10
+                                          Text: =ThisItem.Vertical.Value
+                                    - lbl_TypeValue_2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          LayoutMinHeight: =0
+                                          PaddingLeft: =10
+                                          Text: =ThisItem.AssessmentType.Value
+                                          Width: =100
+                                          Wrap: =false
+                                    - lbl_PeriodValue_2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          LayoutMinHeight: =0
+                                          PaddingLeft: =20
+                                          Text: =ThisItem.Period
+                                          Width: =108
+                                          Wrap: =false
+                                    - lbl_LastAssessedValue_2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          LayoutMinHeight: =0
+                                          PaddingLeft: =10
+                                          Text: =Text(ThisItem.CompletionDate, "yyyy-mm-dd")
+                                          Width: =140
+                                          Wrap: =false
+                                    - lbl_OverallScoreValue_2:
+                                        Control: Label@2.5.1
+                                        Properties:
+                                          AlignInContainer: =AlignInContainer.Stretch
+                                          Color: =RGBA(0, 130, 101, 1)
+                                          FontWeight: =FontWeight.Semibold
+                                          LayoutMinHeight: =0
+                                          PaddingLeft: =10
+                                          Text: |-
+                                            =If(
+                                                IsBlank(ThisItem.OverallScore),
+                                                "-",
+                                                Text(ThisItem.OverallScore, "0.0") & "/5.0"
+                                            )
+                                          Width: =130
+                                          Wrap: =false
+                                    - btn_Action_2:
+                                        Control: Button@0.0.45
+                                        Properties:
+                                          Align: =Align.Justify
+                                          AlignInContainer: =AlignInContainer.Center
+                                          BasePaletteColor: =RGBA(0, 130, 101, 1)
+                                          BorderRadius: =5
+                                          Font: =Font.'Open Sans'
+                                          FontWeight: =FontWeight.Normal
+                                          Text: |-
+                                            =Switch(
+                                                ThisItem.'Status '.Value,
+                                                "Completed", "View",
+                                                "Draft", "Continue", 
+                                                "Overdue", "Start",
+                                                "New"  // Default value if none of the above match
+                                            )
+                                          VerticalAlign: =VerticalAlign.Middle
+                                    - txt_StatusValue_2:
+                                        Control: Text@0.0.51
+                                        Properties:
+                                          Align: ='TextCanvas.Align'.Justify
+                                          AlignInContainer: =AlignInContainer.Center
+                                          BorderRadius: =12
+                                          BorderStyle: =BorderStyle.None
+                                          BorderThickness: =1
+                                          Fill: |-
+                                            =Switch(
+                                                ThisItem.'Status '.Value,
+                                                "Completed", RGBA(115, 163, 67, 1),  // Leaf green - #73A343
+                                                "Draft", RGBA(223, 132, 11, 1),      // Valencia Orange - #DF840B   
+                                                "Overdue", RGBA(177, 45, 27, 1),    // Apple red - #B12D1B
+                                                RGBA(229, 231, 235, 1)                // Default gray - #e5e7eb
+                                            )
+                                          Font: =Font.'Open Sans'
+                                          Height: =30
+                                          PaddingBottom: =5
+                                          PaddingLeft: =10
+                                          PaddingRight: =5
+                                          PaddingTop: =5
+                                          Text: =ThisItem.'Status '.Value
+                                          VerticalAlign: =VerticalAlign.Middle
+      - GlobalHeaderSidePanelFooter_3:
+          Control: CanvasComponent
+          ComponentName: GlobalHeaderSidePanelFooter
+          Properties:
+            Height: =768
+            Width: =1366

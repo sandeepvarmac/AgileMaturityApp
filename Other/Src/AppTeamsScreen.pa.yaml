@@ -1,0 +1,409 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+Screens:
+  AppTeamsScreen:
+    Properties:
+      OnVisible: |-
+        =// Initialize overlay control variables
+        UpdateContext({
+            showOverlay: false,
+            selectedTeam: Blank(),
+            showAddTeamForm: false,
+            showTeamSelector: false,
+            showEmptyState: false
+        });
+
+
+
+
+
+        // Optional: Show loading message
+        UpdateContext({dataLoaded: true});
+
+        // Load your data
+        ClearCollect(
+            MyTeams,
+            Filter(
+                Teams,
+                 ScrumMaster = User().FullName
+            )
+        );
+        ClearCollect(colVerticals, Verticals);
+    Children:
+      - GlobalHeaderSidePanelFooter_Teams:
+          Control: CanvasComponent
+          ComponentName: GlobalHeaderSidePanelFooter
+          Properties:
+            Height: =768
+            Width: =1366
+      - cntr_TeamsBody:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =App.Height - GlobalHeaderSidePanelFooter_Teams.cntr_globalHeaderHeight
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =App.Width - GlobalHeaderSidePanelFooter_Teams.cntr_globalNavBarWidth
+            X: =GlobalHeaderSidePanelFooter_Teams.cntr_globalNavBarWidth
+            Y: =GlobalHeaderSidePanelFooter_Teams.cntr_globalHeaderHeight
+          Children:
+            - btn_NewTeam:
+                Control: Button@0.0.45
+                Properties:
+                  Appearance: ='ButtonCanvas.Appearance'.Primary
+                  BasePaletteColor: =RGBA(0, 130, 101, 1)
+                  Font: =Font.'Segoe UI'
+                  FontSize: =20
+                  Height: =48
+                  Icon: ="Add"
+                  IconStyle: ='ButtonCanvas.IconStyle'.Filled
+                  Layout: ='ButtonCanvas.Layout'.IconBefore
+                  OnSelect: |-
+                    =// Show both the overlay and the add team form
+                    UpdateContext({
+                        showOverlay: true,
+                        showAddTeamForm: true
+                    });
+
+                    Reset(drpdwn_AddNewTeam_Vertical);
+                    Reset(Txt_AddNewTeam_Name);
+                  Text: ="New Team"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =236
+                  X: =824
+                  Y: =24
+            - glry_Teams_Panel:
+                Control: Gallery@2.15.0
+                Variant: Vertical
+                Properties:
+                  BorderColor: =RGBA(191, 191, 191, 1)
+                  BorderThickness: =2
+                  Height: =530
+                  Items: =MyTeams
+                  TemplatePadding: =20
+                  TemplateSize: =200
+                  Width: =1020
+                  WrapCount: =2
+                  X: =40
+                  Y: =96
+                Children:
+                  - cntr_Teams_Panel:
+                      Control: GroupContainer@1.3.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =RGBA(230, 230, 230, 1)
+                        BorderThickness: =1
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Width: =480
+                      Children:
+                        - lbl_Teams_TeamName:
+                            Control: Label@2.5.1
+                            Properties:
+                              FontWeight: =FontWeight.Semibold
+                              Size: =15
+                              Text: =ThisItem.TeamName
+                              X: =19
+                              Y: =16
+                        - Label2_5Vertical:
+                            Control: Label@2.5.1
+                            Properties:
+                              DisabledColor: =RGBA(191, 191, 191, 1)
+                              Height: =37
+                              Text: =ThisItem.Vertical.Value
+                              Width: =216
+                              X: =20
+                              Y: =56
+                        - btn_Teams_AssessTeam:
+                            Control: Button@0.0.45
+                            Properties:
+                              BasePaletteColor: =RGBA(0, 130, 101, 1)
+                              Font: =Font.'Open Sans'
+                              FontSize: =16
+                              Height: =39
+                              Text: ="Assess Team"
+                              Width: =441
+                              X: =20
+                              Y: =143
+      - GlobalOverlay_Teams:
+          Control: CanvasComponent
+          ComponentName: GlobalOverlay
+          Properties:
+            ContentAlignment: ="Center"
+            Height: =768
+            Is_Visible: =showOverlay
+            MaxContentHeight: =466
+            MaxContentWidth: =416
+            On_Select: =
+            Overlay_Color: =RGBA(0, 0, 0, 0.3)
+            Visible: =showOverlay
+            Width: =1366
+      - cntr_Main_AddNewTeam:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            Fill: =RGBA(255, 255, 255, 1)
+            Height: =450
+            RadiusBottomLeft: =8
+            RadiusBottomRight: =8
+            RadiusTopLeft: =8
+            RadiusTopRight: =8
+            Visible: =showAddTeamForm && showOverlay
+            Width: =400
+            X: =625
+            Y: =167
+          Children:
+            - cntr_Header_AddNewTeam:
+                Control: GroupContainer@1.3.0
+                Variant: AutoLayout
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderStyle: =BorderStyle.None
+                  Height: =70
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Width: =Parent.Width
+                Children:
+                  - lbl_Header_AddNewTeam:
+                      Control: Label@2.5.1
+                      Properties:
+                        AlignInContainer: =AlignInContainer.Center
+                        Font: =Font.'Open Sans'
+                        PaddingLeft: =Parent.PaddingLeft + 15
+                        Text: ="Add New Team"
+                        Width: =350
+                  - icn_header_AddNewTeamClose:
+                      Control: Classic/Icon@2.5.0
+                      Properties:
+                        AlignInContainer: =AlignInContainer.Center
+                        Color: =RGBA(137, 137, 137, 1)
+                        Icon: =Icon.Cancel
+                        OnSelect: |-
+                          =UpdateContext({
+                              showOverlay: false,
+                              showAddTeamForm: false
+                          });
+                        Width: =30
+            - cntr_Body_AddNewTeam:
+                Control: GroupContainer@1.3.0
+                Variant: AutoLayout
+                Properties:
+                  BorderColor: =RGBA(0, 0, 0, 0)
+                  BorderStyle: =BorderStyle.None
+                  Height: =cntr_Main_AddNewTeam.Height - (cntr_Header_AddNewTeam.Height * 2)
+                  LayoutDirection: =LayoutDirection.Vertical
+                  PaddingLeft: =20
+                  PaddingTop: =20
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Width: =Parent.Width
+                  Y: =cntr_Header_AddNewTeam.Height
+                Children:
+                  - lbl_AddNewTeam_Name:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(79, 90, 94, 1)
+                        DisabledColor: =RGBA(191, 191, 191, 1)
+                        Font: =Font.'Open Sans'
+                        PaddingLeft: =0
+                        Size: =12
+                        Text: ="Team Name*"
+                  - Txt_AddNewTeam_Name:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        BorderColor: =RGBA(191, 191, 191, 1)
+                        BorderRadius: =4
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =40
+                        Width: =lbl_Header_AddNewTeam.Width + icn_header_AddNewTeamClose.Width - 20
+                  - lbl_AddNewTeam_Space1:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(79, 90, 94, 1)
+                        DisabledColor: =RGBA(191, 191, 191, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =10
+                        PaddingLeft: =0
+                        Size: =12
+                        Text: =
+                  - lbl_AddNewTeam_Vertical:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(79, 90, 94, 1)
+                        Font: =Font.'Open Sans'
+                        PaddingLeft: =0
+                        Size: =12
+                        Text: ="Vertical*"
+                  - drpdwn_AddNewTeam_Vertical:
+                      Control: DropDown@0.0.45
+                      Properties:
+                        BorderColor: =RGBA(191, 191, 191, 1)
+                        BorderRadius: =4
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        Fill: =RGBA(255, 255, 255, 1)
+                        Height: =40
+                        Items: =colVerticals
+                        Width: =lbl_Header_AddNewTeam.Width + icn_header_AddNewTeamClose.Width - 20
+                      Children:
+                        - Title1:
+                            Control: DropDownDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="Title"
+                              FieldName: ="Title"
+                              FieldType: ="s"
+                              Order: =1
+                        - VerticalName1:
+                            Control: DropDownDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="VerticalName"
+                              FieldName: ="VerticalName"
+                              FieldType: ="s"
+                              Order: =2
+                        - Attachments1:
+                            Control: DropDownDataField@1.5.0
+                            Variant: textualColumn
+                            IsLocked: true
+                            Properties:
+                              FieldDisplayName: ="Attachments"
+                              FieldName: ="{Attachments}"
+                              FieldType: ="r*"
+                              Order: =3
+                  - lbl_AddNewTeam_Space2:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(79, 90, 94, 1)
+                        DisabledColor: =RGBA(191, 191, 191, 1)
+                        Font: =Font.'Open Sans'
+                        Height: =10
+                        PaddingLeft: =0
+                        Size: =12
+                        Text: =
+                  - lbl_AddNewTeam_SM:
+                      Control: Label@2.5.1
+                      Properties:
+                        Color: =RGBA(79, 90, 94, 1)
+                        Font: =Font.'Open Sans'
+                        PaddingLeft: =0
+                        Size: =12
+                        Text: ="Scrum Master"
+                  - Txt_AddNewTeam_SM:
+                      Control: TextInput@0.0.54
+                      Properties:
+                        AlignInContainer: =AlignInContainer.Start
+                        BorderColor: =RGBA(191, 191, 191, 1)
+                        BorderRadius: =4
+                        BorderStyle: =BorderStyle.Solid
+                        BorderThickness: =1
+                        DisplayMode: =DisplayMode.View
+                        Fill: =RGBA(191, 191, 191, 1)
+                        Font: =Font.Verdana
+                        FontSize: =13
+                        Height: =40
+                        PaddingLeft: =5
+                        Value: =User().FullName
+                        Width: =lbl_Header_AddNewTeam.Width + icn_header_AddNewTeamClose.Width - 20
+            - cntr_Footer_AddNewTeam:
+                Control: GroupContainer@1.3.0
+                Variant: AutoLayout
+                Properties:
+                  BorderStyle: =BorderStyle.None
+                  Height: =cntr_Main_AddNewTeam.Height - (cntr_Header_AddNewTeam.Height + cntr_Body_AddNewTeam.Height)
+                  LayoutAlignItems: =LayoutAlignItems.Center
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutJustifyContent: =LayoutJustifyContent.SpaceBetween
+                  PaddingLeft: =175
+                  PaddingRight: =15
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Width: =Parent.Width
+                  Y: =cntr_Body_AddNewTeam.Height + cntr_Header_AddNewTeam.Height
+                Children:
+                  - btn_AddNewTeam_Cancel:
+                      Control: Button@0.0.45
+                      Properties:
+                        Align: =Align.Center
+                        Appearance: ='ButtonCanvas.Appearance'.Outline
+                        BasePaletteColor: =RGBA(0, 130, 101, 1)
+                        Font: =Font.'Segoe UI'
+                        FontSize: =15
+                        OnSelect: |-
+                          =UpdateContext({
+                              showOverlay: false,
+                              showAddTeamForm: false
+                          });
+                        Text: ="Cancel"
+                  - btn_AddNewTeam_Save:
+                      Control: Button@0.0.45
+                      Properties:
+                        Align: =Align.Center
+                        BasePaletteColor: =RGBA(0, 130, 101, 1)
+                        Font: =Font.'Segoe UI'
+                        FontSize: =15
+                        OnSelect: |+
+                          =If(
+                              IsBlank(Txt_AddNewTeam_Name.Value) || IsBlank(drpdwn_AddNewTeam_Vertical.Selected.ID),
+                              // Validation failed
+                              Notify(
+                                  "Please enter Team Name and select a Vertical",
+                                  NotificationType.Warning
+                              ),
+                              // Validation passed, submit data
+                              Patch(
+                                  'Teams',
+                                  Defaults('Teams'),
+                                  {
+                                      Title: Txt_AddNewTeam_Name.Value,
+                                      TeamName: Txt_AddNewTeam_Name.Value,
+                                      ScrumMaster: Txt_AddNewTeam_SM.Value,
+                                      Status: {
+                                          '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+                                          Value: "Active"
+                                      },
+                                      Vertical: {
+                                      '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedReference",
+                                      Id: drpdwn_AddNewTeam_Vertical.Selected.ID,
+                                      Value: drpdwn_AddNewTeam_Vertical.Selected.Title
+                                  }
+
+                                  }
+                              );
+                              // Hide modal and refresh teams
+                          UpdateContext({
+                              showOverlay: false,
+                              showAddTeamForm: false
+                          });
+                              Notify(
+                                  "Team successfully created",
+                                  NotificationType.Success
+                              )
+                          )
+
+
+
+                        Text: ="Save"

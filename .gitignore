@@ -1,0 +1,30 @@
+# Power Apps Canvas app repo ignores
+
+# Build outputs and local staging
+dist/
+stage-pack/
+
+# Packaged artifacts
+*.msapp
+*.zip
+
+# Logs and temp
+*.log
+*.tmp
+*.bak
+~$*
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Windows device names that slipped in
+nul
+CON
+PRN
+AUX
+COM1
+LPT1
+

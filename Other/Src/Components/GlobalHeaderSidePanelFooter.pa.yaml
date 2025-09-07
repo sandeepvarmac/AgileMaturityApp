@@ -1,0 +1,346 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+ComponentDefinitions:
+  GlobalHeaderSidePanelFooter:
+    DefinitionType: CanvasComponent
+    AccessAppScope: true
+    CustomProperties:
+      cntr_globalHeaderHeight:
+        PropertyKind: Output
+        DisplayName: cntr_globalHeaderHeight
+        Description: A custom property
+        DataType: Number
+      cntr_globalNavBarWidth:
+        PropertyKind: Output
+        DisplayName: cntr_globalNavBarWidth
+        Description: A custom property
+        DataType: Number
+      cntr_globalNavbarHeight:
+        PropertyKind: Output
+        DisplayName: cntr_globalNavbarHeight
+        Description: A custom property
+        DataType: Number
+    Properties:
+      Height: =768
+      Width: =1366
+      cntr_globalHeaderHeight: =cntr_globalHeader.Height
+      cntr_globalNavBarWidth: =cntr_globalNavBar.Width
+      cntr_globalNavbarHeight: =cntr_globalNavBar.Height
+    Children:
+      - cntr_globalHeader:
+          Control: GroupContainer@1.3.0
+          Variant: AutoLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Height: =70
+            LayoutDirection: =LayoutDirection.Horizontal
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =App.Width - cntr_globalNavBar.Width
+            X: =cntr_globalNavBar.Width
+          Children:
+            - hdr_Control:
+                Control: Header@0.0.44
+                Properties:
+                  BasePaletteColor: =RGBA(102, 162, 170, 1)
+                  Fill: =RGBA(0, 130, 101, 1)
+                  Font: =Font.'Segoe UI'
+                  Height: =70
+                  IsLogoVisible: =false
+                  Style: ='Header.Style'.Primary
+                  Title: =CurrentScreen
+                  TitleFontSize: =25
+                  UserEmail: |
+                    =User().Email
+                  UserImage: =Office365Users.UserPhotoV2(User().Email)
+                  X: =cntr_globalNavBar.Width
+      - cntr_globalNavBar:
+          Control: GroupContainer@1.3.0
+          Variant: ManualLayout
+          Properties:
+            DropShadow: =DropShadow.None
+            Fill: =RGBA(15, 53, 87, 1)
+            Height: =App.Height
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =270
+            X: =Parent.X
+          Children:
+            - lbl_Admin:
+                Control: Label@2.5.1
+                Group: grp_Admin
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(191, 191, 191, 1)
+                  BorderThickness: =2
+                  Color: =RGBA(255, 255, 255, 1)
+                  Font: =Font.'Segoe UI'
+                  Height: =70
+                  Text: =
+                  Width: =270
+                  Y: =698
+            - lbl_AppName:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =RGBA(191, 191, 191, 1)
+                  BorderThickness: =1
+                  Color: =RGBA(255, 255, 255, 1)
+                  Font: =Font.'Segoe UI'
+                  Height: =70
+                  Size: =30
+                  Text: ="AMAP"
+                  Width: =270
+            - btn_Dashboard:
+                Control: Classic/Button@2.2.0
+                Group: grp_Dashboard
+                Properties:
+                  Align: =Align.Left
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =0
+                  Fill: =RGBA(15, 53, 87, 1)
+                  FocusedBorderThickness: =0
+                  Font: =Font.Verdana
+                  FontWeight: =FontWeight.Normal
+                  Height: =48
+                  HoverFill: =RGBA(0, 130, 101, 1)
+                  OnSelect: |-
+                    =Set(
+                        CurrentScreen,
+                        "Dashboard"
+                    );
+                    Navigate(
+                        AppHomeScreen,
+                        ScreenTransition.Fade
+                    )
+                  PaddingBottom: =0
+                  PaddingLeft: =45
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  PressedBorderColor: =
+                  PressedFill: =RGBA(0, 130, 101, 1)
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Text: ="Dashboard"
+                  Width: =Parent.Width
+                  X: =Parent.X+1
+                  Y: =96
+            - icn_Dashboard:
+                Control: Icon@0.0.7
+                Group: grp_Dashboard
+                Properties:
+                  Height: =25
+                  Icon: ="Home"
+                  IconColor: =RGBA(255, 255, 255, 1)
+                  IconStyle: ='Icon.IconStyle'.Filled
+                  Width: =50
+                  X: =Parent.X
+                  Y: =108
+            - btn_Teams:
+                Control: Classic/Button@2.2.0
+                Group: grp_Teams
+                Properties:
+                  Align: =Align.Left
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =0
+                  Fill: =RGBA(15, 53, 87, 1)
+                  FocusedBorderThickness: =0
+                  Font: =Font.Verdana
+                  FontWeight: =FontWeight.Normal
+                  Height: =48
+                  HoverFill: =RGBA(0, 130, 101, 1)
+                  OnSelect: |-
+                    =Set(
+                        CurrentScreen,
+                        "Teams"
+                    );
+                    Navigate(
+                        AppTeamsScreen,
+                        ScreenTransition.Fade
+                    )
+                  PaddingBottom: =0
+                  PaddingLeft: =45
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  PressedBorderColor: =
+                  PressedFill: =RGBA(0, 130, 101, 1)
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Text: ="Teams"
+                  Width: =Parent.Width
+                  X: =Parent.X+1
+                  Y: =159
+            - icn_Teams:
+                Control: Icon@0.0.7
+                Group: grp_Teams
+                Properties:
+                  Height: =25
+                  Icon: ="People"
+                  IconColor: =RGBA(255, 255, 255, 1)
+                  IconStyle: ='Icon.IconStyle'.Filled
+                  Width: =50
+                  X: =Parent.X
+                  Y: =170
+            - btn_Assessments:
+                Control: Classic/Button@2.2.0
+                Group: grp_Assessments
+                Properties:
+                  Align: =Align.Left
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =0
+                  Fill: =RGBA(15, 53, 87, 1)
+                  FocusedBorderThickness: =0
+                  Font: =Font.Verdana
+                  FontWeight: =FontWeight.Normal
+                  Height: =48
+                  HoverFill: =RGBA(0, 130, 101, 1)
+                  OnSelect: |-
+                    =Set(
+                        CurrentScreen,
+                        "Assessments"
+                    );
+                    Navigate(
+                        AppAssessmentsScreen,
+                        ScreenTransition.Fade
+                    )
+                  PaddingBottom: =0
+                  PaddingLeft: =45
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  PressedBorderColor: =
+                  PressedFill: =RGBA(0, 130, 101, 1)
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Text: ="Assessments"
+                  Width: =Parent.Width
+                  X: =Parent.X+1
+                  Y: =222
+            - icn_Assessments:
+                Control: Icon@0.0.7
+                Group: grp_Assessments
+                Properties:
+                  Height: =25
+                  Icon: ="DocumentBulletList"
+                  IconColor: =RGBA(255, 255, 255, 1)
+                  IconStyle: ='Icon.IconStyle'.Filled
+                  Width: =50
+                  X: =Parent.X
+                  Y: =234
+            - btn_Reports:
+                Control: Classic/Button@2.2.0
+                Group: grp_Reports
+                Properties:
+                  Align: =Align.Left
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =0
+                  Fill: =RGBA(15, 53, 87, 1)
+                  FocusedBorderThickness: =0
+                  Font: =Font.Verdana
+                  FontWeight: =FontWeight.Normal
+                  Height: =48
+                  HoverFill: =RGBA(0, 130, 101, 1)
+                  OnSelect: |-
+                    =Set(
+                        CurrentScreen,
+                        "Reports"
+                    );
+                    Navigate(
+                        AppReportsScreen,
+                        ScreenTransition.Fade
+                    )
+                  PaddingBottom: =0
+                  PaddingLeft: =45
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  PressedBorderColor: =
+                  PressedFill: =RGBA(0, 130, 101, 1)
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Text: ="Reports"
+                  Width: =Parent.Width
+                  X: =Parent.X+1
+                  Y: =284
+            - icn_Reports:
+                Control: Icon@0.0.7
+                Group: grp_Reports
+                Properties:
+                  Height: =25
+                  Icon: ="DocumentBulletList"
+                  IconColor: =RGBA(255, 255, 255, 1)
+                  IconStyle: ='Icon.IconStyle'.Filled
+                  Width: =50
+                  X: =Parent.X
+                  Y: =296
+            - btn_Admin:
+                Control: Classic/Button@2.2.0
+                Group: grp_Admin
+                Properties:
+                  Align: =Align.Left
+                  BorderColor: =
+                  BorderStyle: =BorderStyle.None
+                  BorderThickness: =0
+                  Fill: =RGBA(15, 53, 87, 1)
+                  FocusedBorderThickness: =0
+                  Font: =Font.Verdana
+                  FontWeight: =FontWeight.Normal
+                  Height: =70
+                  HoverFill: =RGBA(0, 130, 101, 1)
+                  OnSelect: |-
+                    =Set(
+                        CurrentScreen,
+                        "Admin"
+                    );
+                    Navigate(
+                        AppAdminScreen,
+                        ScreenTransition.Fade
+                    )
+                  PaddingBottom: =0
+                  PaddingLeft: =45
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  PressedBorderColor: =
+                  PressedFill: =RGBA(0, 130, 101, 1)
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Text: ="Admin"
+                  Width: =Parent.Width
+                  X: =Parent.X+1
+                  Y: =698
+            - icn_Admin:
+                Control: Icon@0.0.7
+                Group: grp_Admin
+                Properties:
+                  Height: =25
+                  Icon: ="Settings"
+                  IconColor: =RGBA(255, 255, 255, 1)
+                  IconStyle: ='Icon.IconStyle'.Filled
+                  Width: =50
+                  X: =Parent.X
+                  Y: =720
+            - Image1:
+                Control: Image@2.2.3
+                Properties:
+                  Height: =70
+                  Image: ='ChatGPT Image May 20, 2025, 08_54_30 PM (1)'
+                  Width: =88
+                  X: =13

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Read(//c/Users/Administrator/AppData/Local/Microsoft/PowerAppsCli/Microsoft.PowerApps.CLI.1.48.2/tools/logs/**)",
+      "Bash(for file in \"C:\\Dev\\AgileMaturityApp\\pkgs\\TableDefinitions\"/*.json)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(grep:*)",
+      "Bash(done)",
+      "Bash(pac canvas pack:*)",
+      "Bash(pac canvas unpack:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
