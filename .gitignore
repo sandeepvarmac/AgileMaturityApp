@@ -3,6 +3,7 @@
 # Build outputs and local staging
 dist/
 stage-pack/
+archive/
 
 # Packaged artifacts
 *.msapp
@@ -27,4 +28,3 @@ PRN
 AUX
 COM1
 LPT1
-
