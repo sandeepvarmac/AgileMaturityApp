@@ -1,0 +1,6 @@
+AppAdminScreen As screen:
+    Fill: =Color.White
+    LoadingSpinnerColor: =App.Theme.Colors.Primary
+
+    GlobalHeaderSidePanelFooter_5 As GlobalHeaderSidePanelFooter:
+

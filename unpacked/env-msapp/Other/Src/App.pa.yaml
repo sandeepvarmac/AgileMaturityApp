@@ -1,0 +1,50 @@
+# ************************************************************************************************
+# Warning: YAML source code for Canvas Apps should only be used to review changes made within Power Apps Studio and for minor edits (Preview).
+# Use the maker portal to create and edit your Power Apps.
+# 
+# The schema file for Canvas Apps is available at https://go.microsoft.com/fwlink/?linkid=2304907
+# 
+# For more information, visit https://go.microsoft.com/fwlink/?linkid=2292623
+# ************************************************************************************************
+App:
+  Properties:
+    OnStart: |+
+      =Set(CurrentScreen, "Dashboard");
+      // Initialize global variables for tracking selection and progress
+      Set(selectedSubDimensionID, 0);  // Will store the selected sub-dimension ID
+
+
+      // Add to App.OnStart - Define status constants
+      ClearCollect(
+          colStatusValues,
+          {
+              StatusKey: "ToDo", 
+              StatusText: "To Do", 
+              StatusColor: ColorValue("#898989")
+          },
+          {
+              StatusKey: "InProgress", 
+              StatusText: "In Progress", 
+              StatusColor: ColorValue("#0F3557")
+          },
+          {
+              StatusKey: "Completed", 
+              StatusText: "Completed", 
+              StatusColor: ColorValue("#008265")
+          },
+          {
+              StatusKey: "NoStatements", 
+              StatusText: "No Statements", 
+              StatusColor: ColorValue("#898989")
+          }
+      );
+
+
+      // Initialize modal visibility variables
+      Set(varShowNewTeamDialog, false);
+
+
+
+
+
+    Theme: =ButtonTheme

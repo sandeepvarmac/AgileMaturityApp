@@ -1,0 +1,83 @@
+{
+  "1ebb4259-32e9-4143-91eb-a8d745efe01e": {
+    "appActions": [
+      "providers/PowerPlatform.Governance/Operations/Read",
+      "providers/PowerPlatform.Governance/Operations/Write"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "SharePoint",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1762/1.0.1762.4298/sharepointonline/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_sharepointonline",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {
+      "https://speridiantec-my.sharepoint.com/personal/sandeep_varma_speridian_com": {
+        "dataSources": {
+          "AppRoles": {
+            "tableName": "efca3be0-8301-48d6-89f9-bdb9b2e66e25"
+          },
+          "AssessmentHistory": {
+            "tableName": "d2a4100f-33b2-4c54-8bc0-fc0534b7cf66"
+          },
+          "AssessmentRatings": {
+            "tableName": "b6fa709f-8751-4350-9ffc-4b63678f6b6e"
+          },
+          "Assessments": {
+            "tableName": "4d7ff8af-4730-4a05-822b-3f43ae83b0d6"
+          },
+          "Dimensions": {
+            "tableName": "d4746dba-1eab-4fa1-8521-c1800bd48af9"
+          },
+          "Statements": {
+            "tableName": "9b24ec75-a120-4ff0-83cb-fc696ff28902"
+          },
+          "SubDimensions": {
+            "tableName": "31e9f8a5-7b31-431a-97d9-e007e1facd26"
+          },
+          "Teams": {
+            "tableName": "036f502b-9ef8-4a52-bbf5-e0662c227b7d"
+          },
+          "Verticals": {
+            "tableName": "53a4187d-572d-47f7-a1f3-efa4340264c6"
+          }
+        }
+      }
+    },
+    "dataSources": [
+      "AppRoles",
+      "AssessmentHistory",
+      "AssessmentRatings",
+      "Assessments",
+      "Dimensions",
+      "Statements",
+      "SubDimensions",
+      "Teams",
+      "Verticals"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "1ebb4259-32e9-4143-91eb-a8d745efe01e"
+  },
+  "d397933a-ac63-4f61-aa3c-fb7285e16312": {
+    "appActions": [
+      "UserPhoto_V2"
+    ],
+    "connectionRef": {
+      "apiTier": "Standard",
+      "displayName": "Office 365 Users",
+      "iconUri": "https://conn-afd-prod-endpoint-bmc9bqahasf3grgk.b01.azurefd.net/v1.0.1767/1.0.1767.4341/office365users/icon.png",
+      "id": "/providers/microsoft.powerapps/apis/shared_office365users",
+      "parameterHints": {},
+      "parameterHintsV2": {}
+    },
+    "datasets": {},
+    "dataSources": [
+      "Office365Users"
+    ],
+    "dependencies": {},
+    "dependents": [],
+    "id": "d397933a-ac63-4f61-aa3c-fb7285e16312"
+  }
+}
