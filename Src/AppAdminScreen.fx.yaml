@@ -1,6 +1,210 @@
 AppAdminScreen As screen:
     Fill: =Color.White
     LoadingSpinnerColor: =App.Theme.Colors.Primary
+    OnVisible: |-
+        =Refresh(AppRoles);
+        Refresh(TeamAssessors);
+        Refresh(Teams)
 
     GlobalHeaderSidePanelFooter_5 As GlobalHeaderSidePanelFooter:
+
+    cntr_Admin_Body As groupContainer.manualLayoutContainer:
+        Height: =App.Height - GlobalHeaderSidePanelFooter_5.cntr_globalHeaderHeight
+        Width: =App.Width - GlobalHeaderSidePanelFooter_5.cntr_globalNavBarWidth
+        X: =GlobalHeaderSidePanelFooter_5.cntr_globalNavBarWidth
+        Y: =GlobalHeaderSidePanelFooter_5.cntr_globalHeaderHeight
+        ZIndex: =2
+
+        // ===== Title =====
+        lbl_AdminHeader As label:
+            Text: ="Administration"
+            Size: =20
+            FontWeight: =FontWeight.Semibold
+            X: =20
+            Y: =16
+
+        // ===== Manage Roles =====
+        lbl_RolesHeader As label:
+            Text: ="Manage Roles"
+            Size: =16
+            FontWeight: =FontWeight.Semibold
+            X: =20
+            Y: =56
+
+        txtRoleUserEmail As 'Text input':
+            X: =20
+            Y: =92
+            Width: =320
+            Height: =36
+            BorderStyle: =BorderStyle.Solid
+            PlaceholderText: ="user@domain.com"
+
+        drpRole As dropdown:
+            X: =360
+            Y: =92
+            Width: =220
+            Height: =36
+            Items: =Table({Value:"Admin"},{Value:"Assessor"},{Value:"Super Admin"})
+            Default: ="Admin"
+
+        btn_SaveRole As Button:
+            Text: ="Add / Update Role"
+            X: =600
+            Y: =92
+            Width: =200
+            Height: =36
+            OnSelect: |-
+                =With(
+                    {
+                        em: Trim(txtRoleUserEmail.Text),
+                        roleVal: drpRole.Selected.Value
+                    },
+                    If(
+                        IsBlank(em) || IsBlank(roleVal),
+                        Notify("Email and Role are required.", NotificationType.Warning),
+                        Patch(
+                            AppRoles,
+                            Coalesce(LookUp(AppRoles, 'User'.Email = em), Defaults(AppRoles)),
+                            {
+                                Title: em,
+                                'User': {
+                                    '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                                    Claims: "i:0#.f|membership|" & Lower(em),
+                                    DisplayName: em,
+                                    Email: em
+                                },
+                                Role: { Value: roleVal }
+                            }
+                        );
+                        Notify("Role saved", NotificationType.Success)
+                    )
+                )
+
+        gal_Roles As gallery.variableTemplateHeightGallery:
+            X: =20
+            Y: =140
+            Width: =780
+            Height: =200
+            Items: =AppRoles
+            TemplateSize: =40
+
+            lbl_RoleUser As label:
+                Text: =Coalesce(ThisItem.'User'.DisplayName, ThisItem.Title)
+                X: =10
+                Y: =8
+                Width: =420
+                Size: =12
+
+            lbl_RoleValue As label:
+                Text: =ThisItem.Role.Value
+                X: =450
+                Y: =8
+                Width: =200
+                Size: =12
+
+            icon_DeleteRole As Icon:
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Height: =24
+                Icon: =Icon.Trash
+                IconStyle: ="Outline"
+                TabIndex: =0
+                Tooltip: =""
+                Visible: =true
+                Width: =24
+                X: =740
+                Y: =8
+                ZIndex: =1
+                OnSelect: =Remove(AppRoles, ThisItem)
+
+        // ===== Team Access =====
+        lbl_AccessHeader As label:
+            Text: ="Team Access"
+            Size: =16
+            FontWeight: =FontWeight.Semibold
+            X: =20
+            Y: =360
+
+        drpTeam As dropdown:
+            X: =20
+            Y: =396
+            Width: =320
+            Height: =36
+            Items: =Teams
+            // Choose TeamName or Title in Fields pane after paste
+
+        txtAssessorEmail As 'Text input':
+            X: =360
+            Y: =396
+            Width: =320
+            Height: =36
+            BorderStyle: =BorderStyle.Solid
+            PlaceholderText: ="assessor@domain.com"
+
+        btn_GrantAccess As Button:
+            Text: ="Grant Access"
+            X: =700
+            Y: =396
+            Width: =120
+            Height: =36
+            OnSelect: |-
+                =With(
+                    { t: drpTeam.Selected, em: Trim(txtAssessorEmail.Text) },
+                    If(
+                        IsBlank(t) || IsBlank(em),
+                        Notify("Team and Assessor email are required.", NotificationType.Warning),
+                        Patch(
+                            TeamAssessors,
+                            Defaults(TeamAssessors),
+                            {
+                                TeamID: t,
+                                Assessor: {
+                                    '@odata.type': "#Microsoft.Azure.Connectors.SharePoint.SPListExpandedUser",
+                                    Claims: "i:0#.f|membership|" & Lower(em),
+                                    DisplayName: em,
+                                    Email: em
+                                },
+                                Active: true
+                            }
+                        );
+                        Notify("Access granted", NotificationType.Success)
+                    )
+                )
+
+        gal_Assignments As gallery.variableTemplateHeightGallery:
+            X: =20
+            Y: =444
+            Width: =780
+            Height: =220
+            Items: =TeamAssessors
+            TemplateSize: =40
+
+            lbl_AssignTeam As label:
+                Text: =ThisItem.TeamID.Value
+                X: =10
+                Y: =8
+                Width: =320
+                Size: =12
+
+            lbl_AssignUser As label:
+                Text: =ThisItem.Assessor.DisplayName
+                X: =350
+                Y: =8
+                Width: =320
+                Size: =12
+
+            icon_DeleteAssign As Icon:
+                ContentLanguage: =""
+                DisplayMode: =DisplayMode.Edit
+                Height: =24
+                Icon: =Icon.Trash
+                IconStyle: ="Outline"
+                TabIndex: =0
+                Tooltip: =""
+                Visible: =true
+                Width: =24
+                X: =740
+                Y: =8
+                ZIndex: =1
+                OnSelect: =Remove(TeamAssessors, ThisItem)
 
